@@ -1,0 +1,30 @@
+{
+    "name": "wtm-gui",
+    "version": "0.0.1",
+    "description": "implements the wordpress theme manager library with a graphical user interface",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "electron ./dist/index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Linch1/WTM-GUI.git"
+    },
+    "author": "linch1",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Linch1/WTM-GUI/issues"
+    },
+    "homepage": "https://github.com/Linch1/WTM-GUI#readme",
+    "devDependencies": {
+        "electron": "11.2.0",
+        "typescript": "^4.1.3"
+    },
+    "dependencies": {
+        "ejs-electron": "^2.1.1",
+        "path": "^0.12.7",
+        "prettier": "^2.2.1",
+        "wtm-lib": "git+https://github.com/Linch1/WTM-LIB.git"
+    }
+}
