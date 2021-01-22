@@ -1,3 +1,3 @@
 # WTM-GUI
 
-implements a Graphical user interface for the **Wordpress theme manager** _ library_
+implements a Graphical user interface ( _GUI_ ) for the **Wordpress theme manager** _library_
