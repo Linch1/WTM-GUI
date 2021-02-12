@@ -1,0 +1,88 @@
+<section id="manage-visuals">
+    <div class="container">
+        <h2>Visuals</h2>
+        <div id="[WTM-HTML-!EXEC!-VISUALS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VISUALS-SELECT"></div>
+
+        
+        <div class="form-group row mt-3">
+                    
+            <div class="col-md-12">
+                <h4 class="text-danger">Create Visual</h4>
+            </div>
+            
+            <div class="col-md-6">
+                <label class="col-form-label">name</label>
+                <input type="text" name="" id="visual-name" value="" placeholder="Insert the visual name" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label class="col-form-label">extension</label>
+                <input type="text" name="" id="visual-extension" value="" placeholder="Insert the visual extension [ php, ejs, html ]" class="form-control">
+            </div>
+            
+            <div class="col-md-12 mt-3">
+                <button class="create-visual btn btn-primary" >Create Visual</button>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group row mt-3">
+                    
+                    <div class="col-md-12">
+                        <h4 class="text-danger">Add Script</h4>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="col-form-label">Script Path</label>
+                        <input type="text" name="" id="visual-script-path" value="" placeholder="Insert path to a script" class="form-control">
+                    </div>
+                    
+                    <div class="col-md-12 mt-3">
+                        <button id="add-visual-script" class="btn btn-primary">Add Script</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row mt-3">
+                    <div class="col-md-12">
+                        <h4 class="text-danger">Add Style</h4>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="col-form-label">Style Path</label>
+                        <input type="text" name="" id="visual-style-path" value="" placeholder="Insert path to a style" class="form-control">
+                    </div>
+                    
+                    <div class="col-md-12 mt-3">
+                        <button id="add-visual-style" class="btn btn-primary">Add Style</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row mt-3">
+            <div class="col-md-12">
+                <h4 class="text-danger">Update</h4>
+            </div>
+            <div class="col-md-12 mt-3">
+                <div id="[WTM-HTML-!EXEC!-VISUALS-TEXTAREA]" data-action="!EXEC!" data-type="HTML" data-name="VISUALS-TEXTAREA"></div>
+            </div>
+            <div class="col-md-12 mt-3">
+                <button class="update-selected-visual btn btn-primary" data-type="HTML" data-select-target="VISUALS-SELECT" data-textarea-target="VISUALS-TEXTAREA" >update Selected Visual Html</button>
+                <button class="update-selected-visual btn btn-primary" data-type="ACF" data-select-target="VISUALS-SELECT" data-textarea-target="VISUALS-TEXTAREA" >update Selected Visual Acf</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-danger">Actions</h4>
+                <button class="render-visuals btn btn-success" data-type="HTML">render Visuals Html</button>
+                <button class="render-visuals btn btn-warning" data-type="ACF">render Visuals Acf</button>
+                <button class="render-selected-visual btn btn-primary" data-type="HTML" data-select-target="VISUALS-SELECT">render Selected Visual Html</button>
+                <button class="render-selected-visual btn btn-secondary" data-type="ACF" data-select-target="VISUALS-SELECT">render Selected Visual Acf</button>
+            </div>
+        </div>
+    </div>
+</section>

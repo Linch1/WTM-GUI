@@ -1,0 +1,85 @@
+<section id="manage-views">
+    <div class="container">
+        <h2>Views</h2>
+        <div id="[WTM-HTML-!EXEC!-VIEWS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VIEWS-SELECT"></div>
+        
+    <div id="[WTM-HTML-!EXEC!-VIEW-INCLUDES-DRAG-AND-DROP]" data-action="!EXEC!" data-type="HTML" data-name="VIEW-INCLUDES-DRAG-AND-DROP">
+      <%-include (TEMPLATE_PATH +"/visuals/footer/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+ 
+    </div>
+        <div id="[WTM-HTML-!EXEC!-VIEW-BLOCKS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VIEW-BLOCKS-SELECT"></div>
+
+        <div class="form-group row mt-3">
+                        
+            <div class="col-md-12">
+                <h4 class="text-danger">Create View</h4>
+            </div>
+            
+            <div class="col-md-4">
+                <label class="col-form-label">Folder path</label>
+                <input type="text" name="" id="folder-path" value="/home/pero/projects/WTM/GUI/Views/" placeholder="Insert the views folder path" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label class="col-form-label">Name</label>
+                <input type="text" name="" id="view-name" value="new" placeholder="Insert the view name" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label class="col-form-label">Extension</label>
+                <input type="text" id="view-extension" value="ejs" placeholder="Insert the view extension" class="form-control">
+            </div>
+            
+            <div class="col-md-12 mt-3">
+                <button id="create-view" class="btn btn-primary">Create View</button>
+            </div>
+
+        </div>
+
+        <div class="form-group row mt-3">
+            <div class="col-md-12">
+                <h4 class="text-danger">Add block</h4>
+            </div>
+            <div class="col-md-4">
+                <label class="col-form-label">Block Name</label>
+                <input type="text" id="block-name" placeholder="block name" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label class="col-form-label">Block Open</label>
+                <input type="text" id="block-open" placeholder="block open" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label class="col-form-label">Block Close</label>
+                <input type="text" id="block-close" placeholder="block close" class="form-control">
+            </div>
+            
+            <div class="col-md-12 mt-3">
+                <button id="add-block" class="btn btn-primary">Add Block</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group row mt-3">
+                    <div class="col-md-12">
+                        <h4 class="text-danger">Include path</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="col-form-label">Path</label>
+                        <input type="text" id="path-to-include" placeholder="path to include" class="form-control">
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <button id="include-path" class="btn btn-primary">Include path</button>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row mt-3">
+                    <div class="col-md-12">
+                        <h4 class="text-danger">Include selected visual</h4>
+                        <button id="include-visual" class="btn btn-primary">Include visual</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

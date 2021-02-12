@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-</head>
-
-<body>
-    <!--<[WTM-HTML-BODY]-->
-    <%-include('../visuals/home/render.ejs')%>
-        <!--[WTM-HTML-BODY]>-->
-</body>
-
-</html>
+<% let TEMPLATE_PATH = process.env.PWD; %> 
+<%-include (TEMPLATE_PATH +'/visuals/header/render.ejs', {TEMPLATE_PATH: process.env.PWD})%>
+<!--<[WTM-HTML-BODY]-->
+<%-include (TEMPLATE_PATH +"/visuals/manageProjects/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+<%-include (TEMPLATE_PATH+"/visuals/manageView/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+<%-include (TEMPLATE_PATH +"/visuals/manageVisual/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+<!--[WTM-HTML-BODY]>-->
+<%-include(TEMPLATE_PATH+'/visuals/footer/render.ejs', {TEMPLATE_PATH:process.env.PWD})%>

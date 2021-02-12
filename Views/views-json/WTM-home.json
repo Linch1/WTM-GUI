@@ -1,1 +1,1 @@
-{"blocks":{"BODY":{"open":"","close":"","include":["/home/pero/projects/WTM/GUI/visuals/home/render.ejs"]}},"name":"home"}
+{"blocks":{"BODY":{"open":"","close":"","include":["/home/pero/projects/WTM/GUI/visuals/manageProjects", "/visuals/manageView/render.ejs","/visuals/manageVisual/render.ejs","//[WTM-HTML-New block]"]}},"view":{"name":"home","extension":"ejs"}}

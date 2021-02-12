@@ -1,0 +1,6 @@
+{
+
+    "header": "<%  let TEMPLATE_PATH = process.env.PWD;  %> <%-include (TEMPLATE_PATH + '/visuals/header/render.ejs', {TEMPLATE_PATH: process.env.PWD})%>",
+    "footer": "<%-include (TEMPLATE_PATH + '/visuals/footer/render.ejs', {TEMPLATE_PATH: process.env.PWD})%>"
+ 
+}

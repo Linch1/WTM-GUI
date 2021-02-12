@@ -4,8 +4,10 @@
     "description": "implements the wordpress theme manager library with a graphical user interface",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "electron ./dist/index.js"
+        "start": "electron ./dist/index.js",
+        "views": "node ./dist/Builder/views.js",
+        "visuals": "node ./dist/Builder/visuals.js",
+        "update-lib": "npm i --save git+https://github.com/Linch1/WTM-LIB.git"
     },
     "repository": {
         "type": "git",
@@ -22,7 +24,11 @@
         "typescript": "^4.1.3"
     },
     "dependencies": {
+        "@types/jquery": "^3.5.5",
         "ejs-electron": "^2.1.1",
+        "graphql": "^15.5.0",
+        "graphql-scraper": "^1.2.1",
+        "jquery": "^3.5.1",
         "path": "^0.12.7",
         "prettier": "^2.2.1",
         "wtm-lib": "git+https://github.com/Linch1/WTM-LIB.git"

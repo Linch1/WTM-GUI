@@ -1,0 +1,1 @@
+{"visual":{"name":"footer","extension":"ejs"},"identifiers":{"HTML":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{"ADD-SCRIPTS":{}}},"ACF":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{}}},"dependencies":{"scripts":["./script.js"],"styles":["./style.css"]}}
