@@ -36,9 +36,8 @@ function renderVisual(visual: WTM.Visual, type: WTM.renderTypes){
 $(document).ready(function() {
     
     let bulkVisuals: WTM.BulkVisual = new WTM.BulkVisual(process.env.PWD + "/visuals");
-    let visuals: WTM.Visual[] = bulkVisuals.getAllVisuals();
 
-    $(".render-visuals").click( (e) => { renderVisuals(visuals, $(e.currentTarget).attr("data-type") as WTM.renderTypes ); });
+    $(".render-visuals").click( (e) => { renderVisuals(bulkVisuals.getAllVisuals(), $(e.currentTarget).attr("data-type") as WTM.renderTypes ); });
     $(".render-selected-visual").click( (e) => { 
         let targetSelect = $(`[data-name='${$(e.currentTarget).attr("data-select-target")}']`).find("select");
         let visualPath = targetSelect.find(":selected").val() as string;
@@ -81,6 +80,7 @@ $(document).ready(function() {
             WError.throw(ERRORS.NO_VALID_EXTENSION);
             return 
         }
+        console.log(GUI.VISUALS_PATH + name);
         new WTM.Visual(GUI.VISUALS_PATH + name, extension as WTM.extensions).writer.createVisual();
     });
     $("#add-visual-style").click( evt => {

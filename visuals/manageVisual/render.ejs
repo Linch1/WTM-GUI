@@ -1,10 +1,13 @@
 <section id="manage-visuals">
     <div class="container">
         <h2>Visuals</h2>
-        <div id="[WTM-HTML-!EXEC!-VISUALS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VISUALS-SELECT"></div>
+        
 
         
         <div class="form-group row mt-3">
+
+             <div id="[WTM-HTML-!EXEC!-VISUALS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VISUALS-SELECT" class="col-md-12 mb-3" ><%-include (TEMPLATE_PATH +"/visuals/form-select/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+</div>
                     
             <div class="col-md-12">
                 <h4 class="text-danger">Create Visual</h4>
@@ -67,7 +70,7 @@
                 <h4 class="text-danger">Update</h4>
             </div>
             <div class="col-md-12 mt-3">
-                <div id="[WTM-HTML-!EXEC!-VISUALS-TEXTAREA]" data-action="!EXEC!" data-type="HTML" data-name="VISUALS-TEXTAREA"></div>
+                 <div id="[WTM-HTML-!EXEC!-VISUALS-TEXTAREA]" data-action="!EXEC!" data-type="HTML" data-name="VISUALS-TEXTAREA" ></div>
             </div>
             <div class="col-md-12 mt-3">
                 <button class="update-selected-visual btn btn-primary" data-type="HTML" data-select-target="VISUALS-SELECT" data-textarea-target="VISUALS-TEXTAREA" >update Selected Visual Html</button>

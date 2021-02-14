@@ -1,15 +1,21 @@
 <section id="manage-views">
     <div class="container">
         <h2>Views</h2>
-        <div id="[WTM-HTML-!EXEC!-VIEWS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VIEWS-SELECT"></div>
         
-    <div id="[WTM-HTML-!EXEC!-VIEW-INCLUDES-DRAG-AND-DROP]" data-action="!EXEC!" data-type="HTML" data-name="VIEW-INCLUDES-DRAG-AND-DROP">
-      <%-include (TEMPLATE_PATH +"/visuals/footer/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
- 
-    </div>
-        <div id="[WTM-HTML-!EXEC!-VIEW-BLOCKS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VIEW-BLOCKS-SELECT"></div>
 
         <div class="form-group row mt-3">
+
+             <div id="[WTM-HTML-!EXEC!-VIEWS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VIEWS-SELECT" class="col-md-12 mb-3" ><%-include (TEMPLATE_PATH +"/visuals/form-select/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+</div>
+        
+             <div id="[WTM-HTML-!EXEC!-VIEW-BLOCKS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VIEW-BLOCKS-SELECT" class="col-md-12 mb-3" ><%-include (TEMPLATE_PATH +"/visuals/form-select/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+</div>
+
+             <div id="[WTM-HTML-!EXEC!-VIEW-INCLUDES-DRAG-AND-DROP]" data-action="!EXEC!" data-type="HTML" data-name="VIEW-INCLUDES-DRAG-AND-DROP" class="col-md-12 mb-3" ><%-include (TEMPLATE_PATH +"/visuals/drag-drop/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+</div>
+            <div class="col-md-12 mb-3">
+                <button id="save-view-drag-drop" class="btn btn-primary">Save Drag Drop</button>
+            </div>
                         
             <div class="col-md-12">
                 <h4 class="text-danger">Create View</h4>

@@ -23,9 +23,14 @@ VISUALS_SELECT: string = "VISUALS-SELECT",
 VISUALS_TEXTAREA: string = "VISUALS-TEXTAREA",
 VIEWS_SELECT: string = "VIEWS-SELECT",
 VIEW_BLOCKS_SELECT: string = "VIEW-BLOCKS-SELECT",
+VIEW_DRAG_AND_DROP: string = "VIEW-INCLUDES-DRAG-AND-DROP",
 PROJECTS_SELECT: string = "PROJECTS-SELECT",
 ADD_SCRIPTS: string = "ADD-SCRIPTS",
-ADD_STYLES: string = "ADD-STYLES";
+ADD_STYLES: string = "ADD-STYLES",
+
+CONTAINER_ATTR = 'data-container',
+CONTAINER_CHILD_ATTR = 'data-to-populate',
+CONTAINER_HEADER_ATTR = 'data-header';
 
 
 /**
@@ -35,8 +40,12 @@ GUI.getCurrentSelectedProject = () => {
   WLogger.log(` Retriving selected project `);
   let currentSelected = $(`[data-name='${PROJECTS_SELECT}']`).find(":selected");
   let name = currentSelected.attr("data-name") as string;
-  if(!name) return undefined;
-  else return GUI.PROJECTS.getProjectByName(name)
+  if(!name) {
+    return undefined;
+  } else {
+    GUI.PROJECTS.refreshProjectsCache();
+    return GUI.PROJECTS.getProjectByName(name)
+  }
 }
 /**
  * @description returns the selected visual
@@ -52,7 +61,7 @@ GUI.getCurrentSelectedVisual = () => {
       WError.throw(ERRORS.NO_VALID_EXTENSION);
       return 
   }
-  else return new WTM.Visual(visualFolderPath, visualExtension as WTM.extensions);
+  else return new WTM.Visual(GUI.VISUALS_PATH + visualFolderPath, visualExtension as WTM.extensions);
 }
 /**
  * @description returns the selected view
@@ -76,9 +85,16 @@ GUI.getCurrentSelectedView = () => {
  */
 GUI.getCurrentSelectedViewBlock = () => {
   WLogger.log(` Retriving selected block `);
-  let block = $(`[data-name='${VIEW_BLOCKS_SELECT}']`).find(":selected").val() as string;
+  let block = $(`[data-name='${VIEW_BLOCKS_SELECT}']`).find(":selected").attr('data-block') as string;
   if(!block) return undefined;
   else return block;
+}
+
+function loadScript(div: HTMLElement, src: string) {
+  var script = document.createElement('script');
+  script.src = src;
+  script.async = false;
+  div.appendChild(script);
 }
 /**
  * @description add the project scripts where the ADD-SCRIPTS executable identifier is present
@@ -88,7 +104,7 @@ GUI.populateScripts = (div: JQuery<HTMLElement>) => {
   let currentProject = GUI.getCurrentSelectedProject() ;
   if(!currentProject) return;
   for( let scriptPath of currentProject.getScripts()){
-    div.append(` <script src="${scriptPath}" type="text/javascript"></script> `);
+    loadScript(div[0], scriptPath);
   }
 }
 /**
@@ -98,94 +114,224 @@ GUI.populateStyles = (div: JQuery<HTMLElement>) =>  {
   WLogger.log(` Populating styles `);
   let currentProject = GUI.getCurrentSelectedProject() ;
   if(!currentProject) return;
-  console.log(currentProject.getStyles())
   for( let stylePath of currentProject.getStyles()){
-    console.log(stylePath)
     div.append(` <link rel="stylesheet" type="text/css" href="${stylePath}"> `);
   }
 }
 /**
  * @description populate the passed select with the existing visuals of the current project
- * @param parentSelect a select jquery element
+ * @param parentContainer a select jquery element
  */
-GUI.populateProjects = (parentSelect: JQuery<HTMLElement>) =>  {
+GUI.populateProjects = (parentContainer: JQuery<HTMLElement>) =>  {
   WLogger.log(` Populating projects `);
-  parentSelect.empty();
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).clone();
   let projects = GUI.PROJECTS.readProjects();
+  parentContainer.empty();
   for (let project of projects) {
+    let child = childSkeleton.clone();
     let name = project.getName();
     let path = project.getPath();
     let visualsPath = project.getVisualsPath();
     let viewsPath = project.getVisualsPath();
     let extension = project.getExtension();
-    parentSelect.append(`<option 
-    data-name="${name}" data-extension="${extension}"
-    data-visualsPath="${visualsPath}" data-viewsPath="${viewsPath}"
-    data-path="${path}" >${name}</option>`);
+
+    child.attr('data-name', name);
+    child.attr('data-extension', extension);
+    child.attr('data-visualsPath', visualsPath);
+    child.attr('data-viewsPath', viewsPath);
+    child.attr('data-path', path);
+    child.text(name);
+
+    parentContainer.append(child)
   }
 }
 /**
  * @description populate the passed select with the existing visuals of the current project
- * @param parentSelect a select jquery element
+ * @param parentContainer a select jquery element
  */
-GUI.populateVisuals = (parentSelect: JQuery<HTMLElement>) =>  {
+GUI.populateVisuals = (parentContainer: JQuery<HTMLElement>) =>  {
   WLogger.log(` Populating visuals `);
-  parentSelect.empty();
+  
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).clone();
+  parentContainer.empty();
 
   let currentProject = GUI.getCurrentSelectedProject();
   if(!currentProject) return;
-
+  
   let bulkVisuals: WTM.BulkVisual = new WTM.BulkVisual(  currentProject.getVisualsPath() );
   let visuals: WTM.Visual[] = bulkVisuals.getAllVisuals();
+  if( !visuals.length ) {
+    let child = childSkeleton.clone();
+    child.text('none');
+    child.attr('data-path', "");
+    child.attr('data-extension', "");
+    parentContainer.append(child);
+  }
   for (let visual of visuals) {
+    let child = childSkeleton.clone();
     let name: string = visual.getName();
     let path: string = visual.getDirPath();
     let extension: string = visual.getExtension();
-    parentSelect.append(`<option value="${path}" data-extension="${extension}" >${name}</option>`);
+    child.attr('data-path', path);
+    child.attr('data-extension', extension);
+    child.text(name)
+    parentContainer.append(child);
   }
 }
 /**
  * @description populate the passed select with the existing views of the current project
- * @param parentSelect a select jquery element
+ * @param parentContainer a select jquery element
  */
-GUI.populateViews = (parentSelect: JQuery<HTMLElement>) => {
+GUI.populateViews = (parentContainer: JQuery<HTMLElement>) => {
   WLogger.log(` Populating views `);
-  parentSelect.empty();
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).clone();
+  parentContainer.empty();
   
-  let currentView = GUI.getCurrentSelectedProject();
-  if(!currentView) return;
+  let currentProject = GUI.getCurrentSelectedProject();
+  if(!currentProject) return;
 
-  let currentViewsPath = currentView.getViewsPath();
+  let currentViewsPath = currentProject.getViewsPath();
   let bulkViews: WTM.BulkView = new WTM.BulkView( currentViewsPath, 'view' );
   let views: WTM.View[] = bulkViews.getAllViews();
+  if( !views.length ) {
+    let child = childSkeleton.clone();
+    child.text('none');
+    child.attr("data-parentPath", "");
+    child.attr("data-extension", "");
+    child.attr("data-name", "");
+    parentContainer.append(child);
+  }
   for (let view of views) {
+    let child = childSkeleton.clone();
     let name: string = view.getName();
     let parentPath: string = GUI.VIEWS_PATH;
     let extension: string = view.getExtension();
-    parentSelect.append(`<option data-parentPath="${parentPath}" data-extension="${extension}" data-name="${name}" >${name}</option>`);
+    child.attr("data-parentPath", parentPath)
+    child.attr("data-extension", extension)
+    child.attr("data-name", name)
+    child.text(name);
+    parentContainer.append(child);
   }
 }
 /**
  * @description populate the passed select with the existing blocks of the current selected view
- * @param parentSelect a select jquery element
+ * @param parentContainer a select jquery element
  */
-GUI.populateViewBlocks = (parentSelect: JQuery<HTMLElement>) => {
+GUI.populateViewBlocks = (parentContainer: JQuery<HTMLElement>) => {
   WLogger.log(` Populating blocks `);
-  parentSelect.empty();
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).clone();
+  parentContainer.empty();
+  
+  let view: WTM.View | undefined = GUI.getCurrentSelectedView();
+  if(!view) {
+    let child = childSkeleton.clone();
+    child.attr("data-block", "");
+    child.text("none");
+    parentContainer.append(child);
+    return;
+  }
+
+  let viewBlocks: string[] = view.getBlocksNames();
+  for (let block of viewBlocks) {
+    let child = childSkeleton.clone();
+    child.attr("data-block", block);
+    child.text(block);
+    parentContainer.append(child);
+  }
+}
+/**
+ * @description add the project scripts where the ADD-SCRIPTS executable identifier is present
+ */
+GUI.populateViewPathsToAllowReorder = (parentContainer: JQuery<HTMLElement>) => {
+  WLogger.log(` Populating views content `);
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).clone();
+  let headerSkeleton = parentContainer.find(`[${CONTAINER_HEADER_ATTR}]`).clone();
+  parentContainer.empty()
+  let parentSkeleton = parentContainer.clone();
   
   let view: WTM.View | undefined = GUI.getCurrentSelectedView();
   if(!view) return
 
-  let viewBlocks: string[] = view.getBlocks();
-  for (let block of viewBlocks) {
-    parentSelect.append(`<option value="${block}" >${block}</option>`);
+  let viewBlocks: WTM.informationsJson["blocks"] = view.getBlocks();
+  parentContainer.after(buildViewDragAndDropForReorderPaths( headerSkeleton, parentSkeleton, childSkeleton, viewBlocks, 'BODY' ));
+  parentContainer.remove();
+}
+/**
+ * @description build the drag and drop element inside the views section
+ * - used in _GUI.populateViewContent_
+ * @param headerSkeleton the header of the drag and drops sections
+ * @param parentSkeleton the parent element of the drag and drops sections
+ * @param childSkeleton the draggable elements
+ * @param blocks the views blocks informations as object
+ * @param currentBlock the current analized block
+ * @param includedBlock not an empty string when the current block is a custom block that has as path a comment identifier
+ */
+function buildViewDragAndDropForReorderPaths(
+  headerSkeleton: JQuery<HTMLElement>,
+  parentSkeleton: JQuery<HTMLElement>, 
+  childSkeleton: JQuery<HTMLElement>, 
+  blocks: WTM.informationsJson["blocks"],
+  currentBlock: string,
+  includedBlock?: string
+  ): JQuery<HTMLElement> {
+
+  let toReturn = parentSkeleton.clone();
+  toReturn.attr('data-block', currentBlock);
+  // if the current block is also inside in another block it should have the data-path attribute
+  if ( includedBlock ) {
+    toReturn.attr('data-path', includedBlock);
   }
+  let header = headerSkeleton.clone();
+  header.find('h3').text(currentBlock)
+  toReturn.append( header );
+  console.log(includedBlock)
+
+  for ( let pathToInclude of blocks[currentBlock].include ){
+    if( WTM.Identifiers.checkCommentIdentifier(pathToInclude) ){
+      toReturn.append(buildViewDragAndDropForReorderPaths(headerSkeleton, parentSkeleton, childSkeleton, blocks, WTM.Identifiers.getIdentifierTypeName(pathToInclude)[1], pathToInclude ));
+    } else {
+      let child = childSkeleton.clone();
+      let pathElem = child.find('[data-path]');
+      pathElem.text(pathToInclude);
+      pathElem.attr('data-path', pathToInclude);
+      toReturn.append( child );
+    }
+  }
+
+  return toReturn;
+}
+
+GUI.retriveViewReorderedPaths = ():  WTM.informationsJson["blocks"] => {
+  let replacedIdentifierTag = $(`[data-name='${VIEW_DRAG_AND_DROP}']`);
+  let currentView = GUI.getCurrentSelectedView();
+  if(!currentView) return {};
+  let viewBlocks = currentView.getBlocks();
+  let editedPathsOrder = replacedIdentifierTag.find('[data-path]:not([data-path=""]'); // get all the elements with a path inside
+  let clearedElements: string[] = [];
+  editedPathsOrder.each( ( index, elem ) => {
+    console.log(index)
+    let element = $(elem);
+    let elementPath = element.attr('data-path') as string;
+
+    // if parent has data-block attribute uses it, instead if it is undefined check for the closest element with the data-block attribute.
+    // - .parent() is needed because when the element is an included custom block if .closest() is used it find as the block's parent  the block itself and auto-include the block in itself.
+    // - .closest() instead is used for the other paths that non represtents custom blocks
+    let elementBlockName = $(elem).parent('[data-block]').attr('data-block') as string || $(elem).closest('[data-block]').attr('data-block') as string;
+
+    if( !elementBlockName || !elementPath ) return;
+    if( !clearedElements.includes(elementBlockName) ){
+      viewBlocks[elementBlockName].include = [];
+      clearedElements.push(elementBlockName);
+    }
+    console.log(elementBlockName, elementPath)
+    viewBlocks[elementBlockName].include.push(elementPath);
+  });
+  return viewBlocks; 
 }
 
 /**
  * DECLARE THE DEFAULT EXECUTABLE IDENTIFIERS FUNCTIONS
  */
-// process.env.PWD + "/visuals"
 const
 DefaultExecutable: {
     [key: string]: {
@@ -197,58 +343,56 @@ DefaultExecutable: {
       params: [],
       callback: () => {
         WLogger.log(` Executing ${PROJECTS_SELECT}`);
-        let container = $(`[data-name='${PROJECTS_SELECT}']`);
-        if (!container.length) {
+        let replacedIdentifierTag = $(`[data-name='${PROJECTS_SELECT}']`);
+        if (!replacedIdentifierTag.length) {
           WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
           return;
         }
-        let parentSelect = $("<select></select>");
-        GUI.populateProjects(parentSelect);
-        container.append(parentSelect);
+        let parentContainer = replacedIdentifierTag.find(`[${CONTAINER_ATTR}]`);
+        GUI.populateProjects(parentContainer);
 
         // add listener to change the text contained in the visuals textarea ( used for update them )
         $(`[data-name='${PROJECTS_SELECT}']`).change( evt => {
-          let viewsSelect = $(`[data-name='${VIEWS_SELECT}']`).find("select");
-          let visualsSelect = $(`[data-name='${VISUALS_SELECT}']`).find("select");
-          let blockSelect = $(`[data-name='${VIEW_BLOCKS_SELECT}']`).find("select");
-          GUI.populateViews(viewsSelect);
-          GUI.populateViewBlocks(blockSelect);
-          GUI.populateVisuals(visualsSelect);
+          let viewsContainer = $(`[data-name='${VIEWS_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
+          let visualsContainer = $(`[data-name='${VISUALS_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
+          let blockContainer = $(`[data-name='${VIEW_BLOCKS_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
+          GUI.populateViews(viewsContainer);
+          GUI.populateViewBlocks(blockContainer);
+          GUI.populateVisuals(visualsContainer);
         });
 
-        return container;
+        return replacedIdentifierTag;
       }
     },
     ADD_SCRIPTS: {
       params: [],
       callback: () => {
         WLogger.log(` Executing ${ADD_SCRIPTS}`);
-        let container = $(`[data-name='${ADD_SCRIPTS}']`);
-        GUI.populateScripts(container);
-        return container;
+        let replacedIdentifierTag = $(`[data-name='${ADD_SCRIPTS}']`);
+        GUI.populateScripts(replacedIdentifierTag);
+        return replacedIdentifierTag;
       }
     },
     ADD_STYLES: {
       params: [],
       callback: () => {
         WLogger.log(` Executing ${ADD_STYLES}`);
-        let container = $(`[data-name='${ADD_STYLES}']`);
-        GUI.populateStyles(container);
-        return container;
+        let replacedIdentifierTag = $(`[data-name='${ADD_STYLES}']`);
+        GUI.populateStyles(replacedIdentifierTag);
+        return replacedIdentifierTag;
       }
     },
     VISUALS_SELECT: {
       params: [GUI.TEMPLATE_PATH],
       callback: (visualsPath: string) => {
         WLogger.log(` Executing ${VISUALS_SELECT}`);
-        let container = $(`[data-name='${VISUALS_SELECT}']`);
-        if (!container.length) {
+        let replacedIdentifierTag = $(`[data-name='${VISUALS_SELECT}']`);
+        if (!replacedIdentifierTag.length) {
           WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
           return;
         }
-        let parentSelect = $("<select></select>");
-        GUI.populateVisuals(parentSelect);
-        container.append(parentSelect);
+        let parentContainer = replacedIdentifierTag.find(`[${CONTAINER_ATTR}]`);
+        GUI.populateVisuals(parentContainer);
 
         // add listener to change the text contained in the visuals textarea ( used for update them )
         $(`[data-name='${VISUALS_SELECT}']`).change( evt => {
@@ -259,58 +403,69 @@ DefaultExecutable: {
           $(`[data-name='${VISUALS_TEXTAREA}']`).find("textarea").val(visual.getHtmlDefault());
         });
 
-        return container;
+        return replacedIdentifierTag;
       },
     },
     VISUALS_TEXTAREA: {
       params: [],
       callback: () => {
         WLogger.log(` Executing ${VISUALS_TEXTAREA}`);
-        let container = $(`[data-name='${VISUALS_TEXTAREA}']`);
-        if (!container.length) {
+        let replacedIdentifierTag = $(`[data-name='${VISUALS_TEXTAREA}']`);
+        if (!replacedIdentifierTag.length) {
           WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
           return;
         }
         let textarea = $(`<textarea name="" id="" cols="30" rows="10"></textarea>`);
-        container.append(textarea);
-        return container;
+        replacedIdentifierTag.append(textarea);
+        return replacedIdentifierTag;
       },
     },
     VIEWS_SELECT: {
       params: [],
       callback: () => {
         WLogger.log(` Executing ${VIEWS_SELECT}`);
-        let container = $(`[data-name='${VIEWS_SELECT}']`);
-        if (!container.length) {
+        let replacedIdentifierTag = $(`[data-name='${VIEWS_SELECT}']`);
+        if (!replacedIdentifierTag.length) {
           WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
           return;
         }
-        let parentSelect = $("<select></select>");
-        GUI.populateViews(parentSelect);
-        container.append(parentSelect);
+        let parentContainer = replacedIdentifierTag.find(`[${CONTAINER_ATTR}]`);
+        GUI.populateViews(parentContainer);
 
         // add listener to change the view blocks
         $(`[data-name='${VIEWS_SELECT}']`).change( evt => {
-          let parentSelect = $(`[data-name='${VIEW_BLOCKS_SELECT}']`).find("select");
-          GUI.populateViewBlocks(parentSelect);
+          GUI.populateViewBlocks(parentContainer);
         });
 
-        return container;
+        return replacedIdentifierTag;
       },
     },
     VIEW_BLOCKS_SELECT: {
       params: [],
       callback: () => {
         WLogger.log(` Executing ${VIEW_BLOCKS_SELECT}`);
-        let container = $(`[data-name='${VIEW_BLOCKS_SELECT}']`);
-        if (!container.length) {
+        let replacedIdentifierTag = $(`[data-name='${VIEW_BLOCKS_SELECT}']`);
+        if (!replacedIdentifierTag.length) {
           WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
           return;
         }
-        let parentSelect = $("<select></select>");
-        GUI.populateViewBlocks(parentSelect);
-        container.append(parentSelect);
-        return container;
+        let parentContainer = replacedIdentifierTag.find(`[${CONTAINER_ATTR}]`);
+        GUI.populateViewBlocks(parentContainer);
+        return replacedIdentifierTag;
+      }
+    },
+    VIEW_DRAG_AND_DROP: {
+      params: [],
+      callback: () => {
+        WLogger.log(` Executing ${VIEW_DRAG_AND_DROP}`);
+        let replacedIdentifierTag = $(`[data-name='${VIEW_DRAG_AND_DROP}']`);
+        if (!replacedIdentifierTag.length) {
+          WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
+          return;
+        }
+        let parentContainer = replacedIdentifierTag.find(`[${CONTAINER_ATTR}]`);
+        GUI.populateViewPathsToAllowReorder(parentContainer);
+        return replacedIdentifierTag;
       }
     }
   };

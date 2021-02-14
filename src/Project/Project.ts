@@ -114,27 +114,26 @@ export class Project{
                 stylesDep,
                 scriptsDep
             )
-            // parse styles dep for replace all the paths that starts with ./
+            // parse styles dep for replace all the paths that starts with ./ or those who doesn't contains a '/' char
             for ( let i = 0; i<stylesDep.length; i++){
                 let path = stylesDep[i]
-                if( path.startsWith('./') ) {
+                // if is relative visual path add the visual abs path at the start
+                if( path.startsWith('./') || !path.includes('/') ) {
                     path = path.replace('./', '');
                     path = WTM.StringComposeWriter.concatenatePaths(
-                        this.getVisualsPath(),
-                        visual.getName(),
+                        visual.getStylesDirPath(),
                         path
                     )
                     stylesDep[i] = path;
                 }
             }
-            // parse scripts dep for replace all the paths that starts with ./
+            // parse scripts dep for replace all the paths that starts with ./ or those who doesn't contains a '/' char
             for ( let i = 0; i<scriptsDep.length; i++){
                 let path = scriptsDep[i]
-                if( path.startsWith('./') ) {
+                if( path.startsWith('./') || !path.includes('/') ) {
                     path = path.replace('./', '');
                     path = WTM.StringComposeWriter.concatenatePaths(
-                        this.getVisualsPath(),
-                        visual.getName(),
+                        visual.getScriptsDirPath(),
                         path
                     )
                     scriptsDep[i] = path;

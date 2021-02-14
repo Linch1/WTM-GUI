@@ -1,0 +1,1 @@
+{"visual":{"name":"drag-drop","extension":"ejs"},"identifiers":{"HTML":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{}},"ACF":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{}}},"dependencies":{"scripts":["https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js","script.js"],"styles":["style.css"]}}

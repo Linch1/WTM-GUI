@@ -1,8 +1,16 @@
-<% let TEMPLATE_PATH = process.env.PWD; %> 
-<%-include (TEMPLATE_PATH +'/visuals/header/render.ejs', {TEMPLATE_PATH: process.env.PWD})%>
+<% let TEMPLATE_PATH = process.env.PWD; %> <%-include (TEMPLATE_PATH
++'/visuals/header/render.ejs', {TEMPLATE_PATH: process.env.PWD})%>
 <!--<[WTM-HTML-BODY]-->
-<%-include (TEMPLATE_PATH +"/visuals/manageProjects/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
-<%-include (TEMPLATE_PATH+"/visuals/manageView/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
-<%-include (TEMPLATE_PATH +"/visuals/manageVisual/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+<%-include (TEMPLATE_PATH +"/visuals/manageProjects/render.ejs", {TEMPLATE_PATH:
+process.env.PWD})-%> <%-include (TEMPLATE_PATH
++"/visuals/manageView/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+<%-include (TEMPLATE_PATH+"/visuals/manageVisual/render.ejs", {TEMPLATE_PATH:
+process.env.PWD})-%>
+<div class="container">
+  <!--<[WTM-HTML-Inner]-->
+  AHAHAH
+  <!--[WTM-HTML-Inner]>-->
+</div>
 <!--[WTM-HTML-BODY]>-->
-<%-include(TEMPLATE_PATH+'/visuals/footer/render.ejs', {TEMPLATE_PATH:process.env.PWD})%>
+<%-include(TEMPLATE_PATH+'/visuals/footer/render.ejs',
+{TEMPLATE_PATH:process.env.PWD})%>

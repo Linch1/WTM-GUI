@@ -4,6 +4,13 @@ import { WLogger } from "../Logger/WLogger";
 import { ERRORS } from "../Errors/Errors";
 const GUI = window.WTM_GUI;
 
+/**
+ * @description analize and retrive the edits made to the views drag and drop
+ */
+function saveNewViewContent(){
+
+}
+
 $(document).ready(function() {
 
     $("#create-view").click( evt => { 
@@ -67,10 +74,16 @@ $(document).ready(function() {
         if(!visual || !currentView || !currentBlock) return;
 
         let renderPath = visual.getRenderFilePath();
+        console.log(renderPath, visual.getDirPath())
         if( renderPath.includes(GUI.TEMPLATE_PATH)) renderPath = renderPath.replace(GUI.TEMPLATE_PATH, "");
         currentView.includeRelative(
             currentBlock,
             renderPath
         )
+    });
+    $("#save-view-drag-drop").click( evt => {
+        let view = GUI.getCurrentSelectedView();
+        if(!view) return;
+        view.setBlocks(GUI.retriveViewReorderedPaths());
     });
 });
