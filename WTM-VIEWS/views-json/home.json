@@ -1,0 +1,16 @@
+{
+  "blocks": {
+    "BODY": {
+      "open": "",
+      "close": "",
+      "include": [
+        "/WTM-VISUALS/manageVisual/render.ejs",
+        "//[WTM-HTML-Inner]",
+        "/WTM-VISUALS/manageProjects/render.ejs",
+        "/WTM-VISUALS/manageView/render.ejs"
+      ]
+    },
+    "Inner": { "open": "<div>", "close": "</div>", "include": [] }
+  },
+  "view": { "name": "home", "projectType": "ejs" }
+}

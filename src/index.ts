@@ -24,7 +24,7 @@ function createWindow() {
   // );
   //win.webContents.openDevTools();
   // win.loadURL("https://google.com");
-  win.loadFile("../Views/view-home.ejs"); // test.js per le finestre con sessioni diversa
+  win.loadFile("../WTM-VIEWS/view-home.ejs"); // test.js per le finestre con sessioni diversa
   win.setMenuBarVisibility(false);
 
   win.setResizable(true);

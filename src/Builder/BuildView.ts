@@ -14,22 +14,25 @@ function saveNewViewContent(){
 $(document).ready(function() {
 
     $("#create-view").click( evt => { 
-        let folderPath = $("#folder-path").val() as string;
+        let currentProject = GUI.getCurrentSelectedProject();
+        if( !currentProject ) return;
+        
         let name = $("#view-name").val() as string;
-        let extension = $("#view-extension").val() as string;
-        WLogger.log(name + extension);
+        let projectType = GUI.getCurrentSelectedProjectTypeViewsSection() as string;
+        console.log(projectType);
+        WLogger.log(name + projectType);
         if ( !name || name == "" ) WLogger.log("no name provided");
-        if ( !extension || extension == "" ) WLogger.log("no extension provided");
-        if ( !name || name == "" || !extension || extension == "" ) {
-            WError.throw(ERRORS.NO_NAME_OR_EXTENSION_PROVIDED); 
+        if ( !projectType || projectType == "" ) WLogger.log("no project type provided");
+        if ( !name || name == "" || !projectType || projectType == "" ) {
+            WError.throw(ERRORS.NO_NAME_OR_PORJECT_TYPE_PROVIDED); 
             return
         }
-        if( !WTM.StringComposeReader.checkValidExtension(extension)) {
-            WLogger.log(extension);
-            WError.throw(ERRORS.NO_VALID_EXTENSION);
+        if( !WTM.checkValidProjectType(projectType)) {
+            WLogger.log(projectType);
+            WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
             return 
         }
-        new WTM.View(folderPath, name, extension as WTM.extensions).create();
+        new WTM.View(currentProject.getViewsPath(), name, projectType as WTM.ProjectTypes).create();
     });
     $("#add-block").click( evt => { 
 
@@ -39,7 +42,7 @@ $(document).ready(function() {
 
         if ( !blockName || blockName == "" ) WLogger.log("no block name provided");
         if ( !blockName || blockName == "" ) {
-            WError.throw(ERRORS.NO_NAME_OR_EXTENSION_PROVIDED); 
+            WError.throw(ERRORS.NO_BLOCK_NAME_PROVIDED); 
             return
         }
         
@@ -48,7 +51,7 @@ $(document).ready(function() {
         if(!currentBlock || !currentView) return;
 
         currentView.addBlock({
-            identifier_name: currentBlock,
+            parentBlockName: currentBlock,
             blockName: blockName,
             open: blockOpen,
             close: blockClose
@@ -85,5 +88,6 @@ $(document).ready(function() {
         let view = GUI.getCurrentSelectedView();
         if(!view) return;
         view.setBlocks(GUI.retriveViewReorderedPaths());
+        view.reCreate();
     });
 });

@@ -1,0 +1,1 @@
+{"visual":{"name":"manageVisual","projectType":"ejs"},"identifiers":{"HTML":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{"VISUALS-SELECT":{"visualTarget":"form-select","parentClasses":"col-md-12 mb-3"},"VISUALS-PROJECTS-TYPES-SELECT":{"visualTarget":"form-select"},"VISUALS-TEXTAREA":{}}},"ACF":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{}}},"dependencies":{"scripts":[],"styles":[]}}

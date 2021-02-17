@@ -1,9 +1,8 @@
 import * as WTM from "wtm-lib";
+import { ConstViews } from "wtm-lib";
 import { ERRORS } from "../Errors/Errors";
 import { WError } from "../Errors/WtmError";
 import { WLogger } from "../Logger/WLogger";
-import { GUIProjects } from "../Project/GUIProjects"
-import { Project } from "../Project/Project";
 
 /**
  * ADD SOME PROPERTIES IN THE WINDOW
@@ -13,9 +12,9 @@ window.WTM_LIB = WTM;
 window.WTM_GUI = {}
 const GUI = window.WTM_GUI;
 GUI.TEMPLATE_PATH = process.env.PWD as string;
-GUI.VISUALS_PATH = GUI.TEMPLATE_PATH + "/visuals/" as string;
-GUI.VIEWS_PATH = GUI.TEMPLATE_PATH + "/Views/" as string;
-GUI.PROJECTS = new GUIProjects();
+GUI.VISUALS_PATH = GUI.TEMPLATE_PATH + `/${WTM.ConstVisuals.visualsDirectory}/` as string;
+GUI.VIEWS_PATH = GUI.TEMPLATE_PATH + `/${WTM.ConstViews.viewsDirectory}/` as string;
+GUI.PROJECTS = new WTM.BulkProjects(GUI.TEMPLATE_PATH);
 GUI.WLogger = WLogger.log;
 
 const
@@ -25,6 +24,9 @@ VIEWS_SELECT: string = "VIEWS-SELECT",
 VIEW_BLOCKS_SELECT: string = "VIEW-BLOCKS-SELECT",
 VIEW_DRAG_AND_DROP: string = "VIEW-INCLUDES-DRAG-AND-DROP",
 PROJECTS_SELECT: string = "PROJECTS-SELECT",
+PROJECT_PROJECTS_TYPES_SELECT: string = "PROJECTS-TYPES-SELECT",
+VIEWS_PROJECTS_TYPES_SELECT: string = "VIEWS-PROJECTS-TYPES-SELECT",
+VISUALS_PROJECTS_TYPES_SELECT: string = "VISUALS-PROJECTS-TYPES-SELECT",
 ADD_SCRIPTS: string = "ADD-SCRIPTS",
 ADD_STYLES: string = "ADD-STYLES",
 
@@ -54,14 +56,14 @@ GUI.getCurrentSelectedVisual = () => {
   WLogger.log(` Retriving selected visual `);
   let currentSelected = $(`[data-name='${VISUALS_SELECT}']`).find(":selected");
   let visualFolderPath = currentSelected.val() as string;
-  let visualExtension = currentSelected.attr("data-extension") as string;
-  if(!visualFolderPath || !visualExtension) return undefined;
-  if( !WTM.StringComposeReader.checkValidExtension(visualExtension)) {
-      WLogger.log(visualExtension);
-      WError.throw(ERRORS.NO_VALID_EXTENSION);
+  let visualProjectType = currentSelected.attr("data-projectType") as string;
+  if(!visualFolderPath || !visualProjectType) return undefined;
+  if( !WTM.checkValidProjectType(visualProjectType)) {
+      WLogger.log(visualProjectType);
+      WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
       return 
   }
-  else return new WTM.Visual(GUI.VISUALS_PATH + visualFolderPath, visualExtension as WTM.extensions);
+  else return new WTM.Visual(GUI.VISUALS_PATH + visualFolderPath, visualProjectType as WTM.ProjectTypes);
 }
 /**
  * @description returns the selected view
@@ -71,14 +73,14 @@ GUI.getCurrentSelectedView = () => {
   let currentSelectedView = $(`[data-name='${VIEWS_SELECT}']`).find(":selected");
   let parentAbsPath = currentSelectedView.attr('data-parentPath') as string;
   let name = currentSelectedView.attr('data-name') as string;
-  let extension = currentSelectedView.attr('data-extension') as string;
-  if( !parentAbsPath || !name || !extension) return undefined;
-  if( !WTM.StringComposeReader.checkValidExtension(extension)) {
-    WLogger.log(extension);
-    WError.throw(ERRORS.NO_VALID_EXTENSION);
+  let projectType = currentSelectedView.attr('data-projectType') as string;
+  if( !parentAbsPath || !name || !projectType) return undefined;
+  if( !WTM.checkValidProjectType(projectType)) {
+    WLogger.log(projectType);
+    WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
     return 
 }
-  else return new WTM.View(parentAbsPath, name, extension as WTM.extensions);
+  else return new WTM.View(parentAbsPath, name, projectType as WTM.ProjectTypes);
 }
 /**
  * @description returns the selected view block
@@ -124,8 +126,8 @@ GUI.populateStyles = (div: JQuery<HTMLElement>) =>  {
  */
 GUI.populateProjects = (parentContainer: JQuery<HTMLElement>) =>  {
   WLogger.log(` Populating projects `);
-  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).clone();
-  let projects = GUI.PROJECTS.readProjects();
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).first().clone();
+  let projects: WTM.Project[] = GUI.PROJECTS.readProjects();
   parentContainer.empty();
   for (let project of projects) {
     let child = childSkeleton.clone();
@@ -133,10 +135,10 @@ GUI.populateProjects = (parentContainer: JQuery<HTMLElement>) =>  {
     let path = project.getPath();
     let visualsPath = project.getVisualsPath();
     let viewsPath = project.getVisualsPath();
-    let extension = project.getExtension();
+    let projectType = project.getProjectType();
 
     child.attr('data-name', name);
-    child.attr('data-extension', extension);
+    child.attr('data-projectType', projectType);
     child.attr('data-visualsPath', visualsPath);
     child.attr('data-viewsPath', viewsPath);
     child.attr('data-path', path);
@@ -145,6 +147,21 @@ GUI.populateProjects = (parentContainer: JQuery<HTMLElement>) =>  {
     parentContainer.append(child)
   }
 }
+GUI.populateAviableProjectsTypes = (parentContainer: JQuery<HTMLElement>) =>  {
+  WLogger.log(` Populating aviable projects types `);
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).first().clone();
+  parentContainer.empty();
+  for (let projectType in WTM.ProjectTypes ) {
+    let child = childSkeleton.clone();
+    child.val(projectType);
+    child.attr('data-projectType', projectType);
+    child.text(projectType);
+    parentContainer.append(child)
+  }
+  let currentProject = GUI.getCurrentSelectedProject();
+  if( !currentProject ) return;
+  else parentContainer.val(currentProject.getProjectType());
+}
 /**
  * @description populate the passed select with the existing visuals of the current project
  * @param parentContainer a select jquery element
@@ -152,28 +169,28 @@ GUI.populateProjects = (parentContainer: JQuery<HTMLElement>) =>  {
 GUI.populateVisuals = (parentContainer: JQuery<HTMLElement>) =>  {
   WLogger.log(` Populating visuals `);
   
-  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).clone();
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).first().clone();
   parentContainer.empty();
 
   let currentProject = GUI.getCurrentSelectedProject();
   if(!currentProject) return;
   
-  let bulkVisuals: WTM.BulkVisual = new WTM.BulkVisual(  currentProject.getVisualsPath() );
+  let bulkVisuals: WTM.BulkVisual = new WTM.BulkVisual(  currentProject.getVisualsPath(), currentProject.getProjectType() );
   let visuals: WTM.Visual[] = bulkVisuals.getAllVisuals();
   if( !visuals.length ) {
     let child = childSkeleton.clone();
     child.text('none');
     child.attr('data-path', "");
-    child.attr('data-extension', "");
+    child.attr('data-projectType', "");
     parentContainer.append(child);
   }
   for (let visual of visuals) {
     let child = childSkeleton.clone();
     let name: string = visual.getName();
     let path: string = visual.getDirPath();
-    let extension: string = visual.getExtension();
+    let projectType: string = visual.getProjectType();
     child.attr('data-path', path);
-    child.attr('data-extension', extension);
+    child.attr('data-projectType', projectType);
     child.text(name)
     parentContainer.append(child);
   }
@@ -184,30 +201,32 @@ GUI.populateVisuals = (parentContainer: JQuery<HTMLElement>) =>  {
  */
 GUI.populateViews = (parentContainer: JQuery<HTMLElement>) => {
   WLogger.log(` Populating views `);
-  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).clone();
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).first().clone();
   parentContainer.empty();
   
   let currentProject = GUI.getCurrentSelectedProject();
   if(!currentProject) return;
 
   let currentViewsPath = currentProject.getViewsPath();
-  let bulkViews: WTM.BulkView = new WTM.BulkView( currentViewsPath, 'view' );
+  console.log(currentViewsPath);
+  let bulkViews: WTM.BulkView = new WTM.BulkView( currentViewsPath, ConstViews.viewsPrefix, currentProject.getProjectType() );
   let views: WTM.View[] = bulkViews.getAllViews();
   if( !views.length ) {
     let child = childSkeleton.clone();
     child.text('none');
     child.attr("data-parentPath", "");
-    child.attr("data-extension", "");
+    child.attr("data-projectType", "");
     child.attr("data-name", "");
     parentContainer.append(child);
   }
   for (let view of views) {
+    console.log(view.getName())
     let child = childSkeleton.clone();
     let name: string = view.getName();
     let parentPath: string = GUI.VIEWS_PATH;
-    let extension: string = view.getExtension();
+    let projectType: WTM.ProjectTypes = view.getProjectType();
     child.attr("data-parentPath", parentPath)
-    child.attr("data-extension", extension)
+    child.attr("data-projectType", projectType)
     child.attr("data-name", name)
     child.text(name);
     parentContainer.append(child);
@@ -219,7 +238,7 @@ GUI.populateViews = (parentContainer: JQuery<HTMLElement>) => {
  */
 GUI.populateViewBlocks = (parentContainer: JQuery<HTMLElement>) => {
   WLogger.log(` Populating blocks `);
-  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).clone();
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).first().clone();
   parentContainer.empty();
   
   let view: WTM.View | undefined = GUI.getCurrentSelectedView();
@@ -232,10 +251,12 @@ GUI.populateViewBlocks = (parentContainer: JQuery<HTMLElement>) => {
   }
 
   let viewBlocks: string[] = view.getBlocksNames();
+  console.log(viewBlocks);
   for (let block of viewBlocks) {
     let child = childSkeleton.clone();
     child.attr("data-block", block);
     child.text(block);
+    console.log(block)
     parentContainer.append(child);
   }
 }
@@ -244,8 +265,8 @@ GUI.populateViewBlocks = (parentContainer: JQuery<HTMLElement>) => {
  */
 GUI.populateViewPathsToAllowReorder = (parentContainer: JQuery<HTMLElement>) => {
   WLogger.log(` Populating views content `);
-  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).clone();
-  let headerSkeleton = parentContainer.find(`[${CONTAINER_HEADER_ATTR}]`).clone();
+  let childSkeleton = parentContainer.find(`[${CONTAINER_CHILD_ATTR}]`).first().clone();
+  let headerSkeleton = parentContainer.find(`[${CONTAINER_HEADER_ATTR}]`).first().clone();
   parentContainer.empty()
   let parentSkeleton = parentContainer.clone();
   
@@ -284,7 +305,6 @@ function buildViewDragAndDropForReorderPaths(
   let header = headerSkeleton.clone();
   header.find('h3').text(currentBlock)
   toReturn.append( header );
-  console.log(includedBlock)
 
   for ( let pathToInclude of blocks[currentBlock].include ){
     if( WTM.Identifiers.checkCommentIdentifier(pathToInclude) ){
@@ -309,7 +329,6 @@ GUI.retriveViewReorderedPaths = ():  WTM.informationsJson["blocks"] => {
   let editedPathsOrder = replacedIdentifierTag.find('[data-path]:not([data-path=""]'); // get all the elements with a path inside
   let clearedElements: string[] = [];
   editedPathsOrder.each( ( index, elem ) => {
-    console.log(index)
     let element = $(elem);
     let elementPath = element.attr('data-path') as string;
 
@@ -323,10 +342,16 @@ GUI.retriveViewReorderedPaths = ():  WTM.informationsJson["blocks"] => {
       viewBlocks[elementBlockName].include = [];
       clearedElements.push(elementBlockName);
     }
-    console.log(elementBlockName, elementPath)
     viewBlocks[elementBlockName].include.push(elementPath);
   });
   return viewBlocks; 
+}
+
+GUI.getCurrentSelectedProjectTypeProjectsSection = () => { return getSelectedProjectType(PROJECT_PROJECTS_TYPES_SELECT) };
+GUI.getCurrentSelectedProjectTypeVisualsSection = () => { return getSelectedProjectType(VISUALS_PROJECTS_TYPES_SELECT) };
+GUI.getCurrentSelectedProjectTypeViewsSection = () => { return getSelectedProjectType(VIEWS_PROJECTS_TYPES_SELECT) };
+function getSelectedProjectType( identifierDivName: string ){
+  return $(`[data-name="${identifierDivName}"`).find('select').val() as unknown as WTM.ProjectTypes;
 }
 
 /**
@@ -361,6 +386,48 @@ DefaultExecutable: {
           GUI.populateVisuals(visualsContainer);
         });
 
+        return replacedIdentifierTag;
+      }
+    },
+    PROJECTS_TYPES_SELECT: {
+      params: [],
+      callback: () => {
+        WLogger.log(` Executing ${PROJECT_PROJECTS_TYPES_SELECT}`);
+        let replacedIdentifierTag = $(`[data-name='${PROJECT_PROJECTS_TYPES_SELECT}']`);
+        if (!replacedIdentifierTag.length) {
+          WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
+          return;
+        }
+        let parentContainer = replacedIdentifierTag.find(`[${CONTAINER_ATTR}]`);
+        GUI.populateAviableProjectsTypes(parentContainer);
+        return replacedIdentifierTag;
+      }
+    },
+    VIEWS_PROJECTS_TYPES_SELECT: {
+      params: [],
+      callback: () => {
+        WLogger.log(` Executing ${VIEWS_PROJECTS_TYPES_SELECT}`);
+        let replacedIdentifierTag = $(`[data-name='${VIEWS_PROJECTS_TYPES_SELECT}']`);
+        if (!replacedIdentifierTag.length) {
+          WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
+          return;
+        }
+        let parentContainer = replacedIdentifierTag.find(`[${CONTAINER_ATTR}]`);
+        GUI.populateAviableProjectsTypes(parentContainer);
+        return replacedIdentifierTag;
+      }
+    },
+    VISUALS_PROJECTS_TYPES_SELECT: {
+      params: [],
+      callback: () => {
+        WLogger.log(` Executing ${VISUALS_PROJECTS_TYPES_SELECT}`);
+        let replacedIdentifierTag = $(`[data-name='${VISUALS_PROJECTS_TYPES_SELECT}']`);
+        if (!replacedIdentifierTag.length) {
+          WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
+          return;
+        }
+        let parentContainer = replacedIdentifierTag.find(`[${CONTAINER_ATTR}]`);
+        GUI.populateAviableProjectsTypes(parentContainer);
         return replacedIdentifierTag;
       }
     },
@@ -434,7 +501,7 @@ DefaultExecutable: {
 
         // add listener to change the view blocks
         $(`[data-name='${VIEWS_SELECT}']`).change( evt => {
-          GUI.populateViewBlocks(parentContainer);
+          GUI.populateViewBlocks($(`[data-name='${VIEW_BLOCKS_SELECT}']`).find(`[${CONTAINER_ATTR}]`));
         });
 
         return replacedIdentifierTag;

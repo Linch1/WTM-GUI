@@ -2,40 +2,39 @@ import * as WTM from "wtm-lib";
 import { WError } from "../Errors/WtmError";
 import { WLogger } from "../Logger/WLogger";
 import { ERRORS } from "../Errors/Errors";
-import { Project } from "../Project/Project";
 const GUI = window.WTM_GUI;
 
 $(document).ready(function() {
     $("#create-project").click( evt => {
         
         let name = $("#project-name").val() as string;
-        let extension = $("#project-extension").val() as string;
+        let projectType = GUI.getCurrentSelectedProjectTypeProjectsSection() as string;
         let path = $("#project-path").val() as string;
         let visualsPath = $("#project-visuals").val() as string;
         let viewsPath = $("#project-views").val() as string;
         let correct = true;
         if ( !name || name == "" ) { WLogger.log("no name provided"); correct = false}
-        if ( !extension || extension == "" ) { WLogger.log("no extension provided"); correct = false}
+        if ( !projectType || projectType == "" ) { WLogger.log("no projectType provided"); correct = false}
         if ( !path || path == "" ) { WLogger.log("no path provided"); correct = false}
-        if ( !visualsPath || visualsPath == "" ) { visualsPath = WTM.StringComposeWriter.concatenatePaths(path, 'visuals')}
-        if ( !viewsPath || viewsPath == "" ) { viewsPath = WTM.StringComposeWriter.concatenatePaths(path, 'Views') }
+        if ( !visualsPath || visualsPath == "" ) { visualsPath = WTM.StringComposeWriter.concatenatePaths(path, WTM.ConstVisuals.visualsDirectory)}
+        if ( !viewsPath || viewsPath == "" ) { viewsPath = WTM.StringComposeWriter.concatenatePaths(path, WTM.ConstViews.viewsDirectory) }
         if ( !correct ) {
-            WError.throw(ERRORS.NO_NAME_OR_EXTENSION_PROVIDED); 
+            WError.throw(ERRORS.NO_NAME_OR_PORJECT_TYPE_PROVIDED); 
             return;
         }
         if ( GUI.PROJECTS.getProjectByName(name) ){
             WError.throw(ERRORS.PROJECT_ALREADY_PRESENT); 
             return;
         }
-        if( !WTM.StringComposeReader.checkValidExtension(extension)) {
-            WLogger.log(extension);
-            WError.throw(ERRORS.NO_VALID_EXTENSION);
+        if( !WTM.checkValidProjectType(projectType)) {
+            WLogger.log(projectType);
+            WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
             return;
         }
         GUI.PROJECTS.addProject(
             {
                 name: name,
-                extension: extension as WTM.extensions,
+                projectType: projectType as WTM.ProjectTypes,
                 path: path,
                 visualsPath: visualsPath,
                 viewsPath: viewsPath,

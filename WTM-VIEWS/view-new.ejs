@@ -1,0 +1,11 @@
+<% let TEMPLATE_PATH = process.env.PWD; %> <%-include  (TEMPLATE_PATH  +
+'/WTM-VISUALS/header/render.ejs', {TEMPLATE_PATH:
+ process.env.PWD})%>
+<!--<[WTM-HTML-BODY]-->
+asd
+<!--<[WTM-HTML-new]-->
+<!--[WTM-HTML-new]>-->
+sdf
+<%-include (TEMPLATE_PATH + "/WTM-VISUALS/form-select/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+ <!--[WTM-HTML-BODY]>-->
+<%-include(TEMPLATE_PATH+'/WTM-VISUALS/footer/render.ejs', {TEMPLATE_PATH:process.env.PWD})%>

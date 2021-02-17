@@ -34,54 +34,52 @@ function renderVisual(visual: WTM.Visual, type: WTM.renderTypes){
 
 }
 $(document).ready(function() {
-    
-    let bulkVisuals: WTM.BulkVisual = new WTM.BulkVisual(process.env.PWD + "/visuals");
 
-    $(".render-visuals").click( (e) => { renderVisuals(bulkVisuals.getAllVisuals(), $(e.currentTarget).attr("data-type") as WTM.renderTypes ); });
+    $(".render-visuals").click( (e) => { 
+        let currentProject = GUI.getCurrentSelectedProject();
+        if(!currentProject) return;
+        let bulk: WTM.BulkVisual = new WTM.BulkVisual(GUI.TEMPLATE_PATH + `/${WTM.ConstVisuals.visualsDirectory}`, currentProject.getProjectType());
+        renderVisuals(
+            bulk.getAllVisuals(),
+            $(e.currentTarget).attr("data-type") as WTM.renderTypes 
+        ); 
+    });
     $(".render-selected-visual").click( (e) => { 
-        let targetSelect = $(`[data-name='${$(e.currentTarget).attr("data-select-target")}']`).find("select");
-        let visualPath = targetSelect.find(":selected").val() as string;
-        let visualExtension = targetSelect.find(":selected").attr("data-extension") as string;
-        WLogger.log(visualPath);
-        if( !WTM.StringComposeReader.checkValidExtension(visualExtension)) {
-            WLogger.log(visualExtension);
-            WError.throw(ERRORS.NO_VALID_EXTENSION);
-            return;
-        }
-        renderVisual( new WTM.Visual(visualPath, visualExtension as WTM.extensions), $(e.currentTarget).attr("data-type") as WTM.renderTypes ); 
+        let currentVisual = GUI.getCurrentSelectedVisual();
+        if( !currentVisual ) return;
+        renderVisual( 
+            currentVisual, 
+            $(e.currentTarget).attr("data-type") as WTM.renderTypes 
+        ); 
     });
 
     $(".update-selected-visual").click( (e) => { 
-        let targetSelect = $(`[data-name='${$(e.currentTarget).attr("data-select-target")}']`).find("select");
-        let visualPath = targetSelect.find(":selected").val() as string;
-        let visualExtension = targetSelect.find(":selected").attr("data-extension") as string;
+        let currentVisual = GUI.getCurrentSelectedVisual();
+        if( !currentVisual ) return;
         let targetTextarea = $(`[data-name='${$(e.currentTarget).attr("data-textarea-target")}']`).find("textarea");
-        WLogger.log(visualPath);
-        if( !WTM.StringComposeReader.checkValidExtension(visualExtension)) {
-            WLogger.log(visualExtension);
-            WError.throw(ERRORS.NO_VALID_EXTENSION);
-            return;
-        }
-        new WTM.Visual(visualPath, visualExtension as WTM.extensions).Vupdate(targetTextarea.val() as string, $(e.currentTarget).attr("data-type") as WTM.renderTypes);
+        currentVisual.Vupdate(targetTextarea.val() as string, $(e.currentTarget).attr("data-type") as WTM.renderTypes);
     });
 
     $(".create-visual").click( evt => { 
+        
+        if( !GUI.getCurrentSelectedProject() ) return;
+
         let name = $("#visual-name").val() as string;
-        let extension = $("#visual-extension").val() as string;
-        WLogger.log(name + extension);
+        let projectType = GUI.getCurrentSelectedProjectTypeVisualsSection() as string;
+        WLogger.log(name + projectType);
         if ( !name || name == "" ) WLogger.log("no name provided");
-        if ( !extension || extension == "" ) WLogger.log("no extension provided");
-        if ( !name || name == "" || !extension || extension == "" ) {
-            WError.throw(ERRORS.NO_NAME_OR_EXTENSION_PROVIDED); 
+        if ( !projectType || projectType == "" ) WLogger.log("no projectType provided");
+        if ( !name || name == "" || !projectType || projectType == "" ) {
+            WError.throw(ERRORS.NO_NAME_OR_PORJECT_TYPE_PROVIDED); 
             return
         }
-        if( !WTM.StringComposeReader.checkValidExtension(extension)) {
-            WLogger.log(extension);
-            WError.throw(ERRORS.NO_VALID_EXTENSION);
+        if( !WTM.checkValidProjectType(projectType)) {
+            WLogger.log(projectType);
+            WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
             return 
         }
         console.log(GUI.VISUALS_PATH + name);
-        new WTM.Visual(GUI.VISUALS_PATH + name, extension as WTM.extensions).writer.createVisual();
+        new WTM.Visual(GUI.VISUALS_PATH + name, projectType as WTM.ProjectTypes).writer.createVisual();
     });
     $("#add-visual-style").click( evt => {
         let stylePath = $("#visual-style-path").val() as string;

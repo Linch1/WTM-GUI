@@ -1,7 +1,3 @@
-import { View } from "wtm-lib";
-import { Visual } from "wtm-lib";
-import { GUIProjects } from "./Project/GUIProjects";
-import { Project } from "./Project/Project";
 import * as WTM from "wtm-lib";
 
 export declare global {
@@ -11,12 +7,17 @@ export declare global {
             TEMPLATE_PATH: string,
             VISUALS_PATH: string,
             VIEWS_PATH: string,
-            PROJECTS: GUIProjects,
+            PROJECTS: WTM.BulkProjects,
             retriveViewReorderedPaths: () => WTM.informationsJson["blocks"],
+            
             getCurrentSelectedViewBlock: () => string | undefined,
-            getCurrentSelectedView: () => View | undefined,
-            getCurrentSelectedVisual: () => Visual | undefined,
-            getCurrentSelectedProject: () => Project | undefined,
+            getCurrentSelectedView: () => WTM.View | undefined,
+            getCurrentSelectedVisual: () => WTM.Visual | undefined,
+            getCurrentSelectedProject: () => WTM.Project | undefined,
+            getCurrentSelectedProjectTypeProjectsSection: () => WTM.ProjectTypes,
+            getCurrentSelectedProjectTypeVisualsSection: () => WTM.ProjectTypes,
+            getCurrentSelectedProjectTypeViewsSection: () => WTM.ProjectTypes,
+
             populateScripts: (div: JQuery<HTMLElement>) => void,
             populateStyles: (div: JQuery<HTMLElement>) => void,
             populateVisuals: (parentSelect: JQuery<HTMLElement>) => void,
@@ -24,6 +25,8 @@ export declare global {
             populateViewBlocks: (parentSelect: JQuery<HTMLElement>) => void,
             populateViewPathsToAllowReorder: (parentSelect: JQuery<HTMLElement>) => void,
             populateProjects: (parentSelect: JQuery<HTMLElement>) => void,
+            populateAviableProjectsTypes: (parentSelect: JQuery<HTMLElement>) => void,
+
             WLogger: (phrase: string) => any;
         }
     }
