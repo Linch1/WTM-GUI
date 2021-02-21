@@ -6,6 +6,7 @@ export enum ERRORS {
     NO_PATH_PROVIDED = "Missing Path",
     NO_VALID_EXTENSION = "Invalid extension",
     NO_VALID_PROJECT_TYPE = "Invalid project type",
+    MISSING_FIELDS = "Some fields are empty or missing",
     EMPTY_BLOCK_NAME = "Missing block name",
     PROJECT_ALREADY_PRESENT = "A project with the same name is already present",
 }

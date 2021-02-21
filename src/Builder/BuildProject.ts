@@ -8,7 +8,7 @@ $(document).ready(function() {
     $("#create-project").click( evt => {
         
         let name = $("#project-name").val() as string;
-        let projectType = GUI.getCurrentSelectedProjectTypeProjectsSection() as string;
+        let projectType = GUI.getCurrentSelectedProjectType() as string;
         let path = $("#project-path").val() as string;
         let visualsPath = $("#project-visuals").val() as string;
         let viewsPath = $("#project-views").val() as string;

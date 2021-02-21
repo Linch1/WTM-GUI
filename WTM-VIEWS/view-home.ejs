@@ -1,14 +1,19 @@
 <% let TEMPLATE_PATH = process.env.PWD; %> <%-include (TEMPLATE_PATH +
-'/WTM-VISUALS/header/render.ejs', {TEMPLATE_PATH: process.env.PWD})%>
+'/WTM-VISUALS/header/ejs/render.ejs', {TEMPLATE_PATH: process.env.PWD})%>
 <!--<[WTM-HTML-BODY]-->
-<%-include (TEMPLATE_PATH + "/WTM-VISUALS/manageVisual/render.ejs", {TEMPLATE_PATH:
+<%-include (TEMPLATE_PATH + "/WTM-VISUALS/common/html/render.html",
+{TEMPLATE_PATH: process.env.PWD})-%>
+<!--<[WTM-HTML-navbar]-->
+<%-include (TEMPLATE_PATH +"/WTM-VISUALS/navbar/ejs/render.ejs", {TEMPLATE_PATH:
 process.env.PWD})-%>
-<div>
-<!--<[WTM-HTML-Inner]-->
-<!--[WTM-HTML-Inner]>-->
-</div>
-<%-include (TEMPLATE_PATH +"/WTM-VISUALS/manageProjects/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
-<%-include (TEMPLATE_PATH +"/WTM-VISUALS/manageView/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
- <!--[WTM-HTML-BODY]>-->
-<%-include(TEMPLATE_PATH+'/WTM-VISUALS/footer/render.ejs',
+<!--[WTM-HTML-navbar]>-->
+<main id="main">
+<!--<[WTM-HTML-main]-->
+<%-include (TEMPLATE_PATH +"/WTM-VISUALS/manageVisual/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+<%-include (TEMPLATE_PATH +"/WTM-VISUALS/manageProjects/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+<%-include (TEMPLATE_PATH +"/WTM-VISUALS/manageView/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+  <!--[WTM-HTML-main]>-->
+</main>
+<!--[WTM-HTML-BODY]>-->
+<%-include(TEMPLATE_PATH+'/WTM-VISUALS/footer/ejs/render.ejs',
 {TEMPLATE_PATH:process.env.PWD})%>

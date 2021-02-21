@@ -14,9 +14,7 @@ export declare global {
             getCurrentSelectedView: () => WTM.View | undefined,
             getCurrentSelectedVisual: () => WTM.Visual | undefined,
             getCurrentSelectedProject: () => WTM.Project | undefined,
-            getCurrentSelectedProjectTypeProjectsSection: () => WTM.ProjectTypes,
-            getCurrentSelectedProjectTypeVisualsSection: () => WTM.ProjectTypes,
-            getCurrentSelectedProjectTypeViewsSection: () => WTM.ProjectTypes,
+            getCurrentSelectedProjectType: () => WTM.ProjectTypes,
 
             populateScripts: (div: JQuery<HTMLElement>) => void,
             populateStyles: (div: JQuery<HTMLElement>) => void,

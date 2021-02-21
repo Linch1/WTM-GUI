@@ -16,10 +16,8 @@ const GUI = window.WTM_GUI;
  * @param type the render type
  */
 function renderVisuals(visuals: WTM.Visual[], type: WTM.renderTypes){
-    WLogger.log(`Compiling visuals. Type: ${type}`);
     for ( let visual of visuals ){
-        visual.writer.populateIdentifiers();
-        visual.converter.render(type);
+        renderVisual( visual, type );
     }
 }
 /**
@@ -28,45 +26,54 @@ function renderVisuals(visuals: WTM.Visual[], type: WTM.renderTypes){
  * @param type the render type
  */
 function renderVisual(visual: WTM.Visual, type: WTM.renderTypes){
-    WLogger.log(`Compiling visual ${visual.getName()}. Type: ${type}`);
-    visual.writer.populateIdentifiers();
-    visual.converter.render(type);
+    if( visual.isCreated() ) {
+        WLogger.log(`Compiling visual ${visual.getName()}. Type: ${type}`);
+        visual.writer.populateIdentifiers();
+        visual.converter.render(type);
+    } else {
+        let fbVisual = visual.getFallbackVisual();
+        WLogger.log(`FALLBACK: Compiling visual ${visual.getName()}. Type: ${type}`);
+        if( fbVisual ) {
+            fbVisual.writer.populateIdentifiers();
+            fbVisual.converter.render(type);
+        };
+    }
 
 }
 $(document).ready(function() {
 
-    $(".render-visuals").click( (e) => { 
+    $("#render-visuals").click( (e) => { 
         let currentProject = GUI.getCurrentSelectedProject();
         if(!currentProject) return;
-        let bulk: WTM.BulkVisual = new WTM.BulkVisual(GUI.TEMPLATE_PATH + `/${WTM.ConstVisuals.visualsDirectory}`, currentProject.getProjectType());
+        let bulk: WTM.BulkVisual = new WTM.BulkVisual(currentProject.getVisualsPath(), currentProject.getProjectType());
         renderVisuals(
-            bulk.getAllVisuals(),
-            $(e.currentTarget).attr("data-type") as WTM.renderTypes 
+            bulk.getAllVisualsFiltered(),
+            WTM.renderTypes.HTML
         ); 
     });
-    $(".render-selected-visual").click( (e) => { 
+    $("#render-selected-visual").click( (e) => { 
         let currentVisual = GUI.getCurrentSelectedVisual();
         if( !currentVisual ) return;
         renderVisual( 
             currentVisual, 
-            $(e.currentTarget).attr("data-type") as WTM.renderTypes 
+            WTM.renderTypes.HTML
         ); 
     });
 
-    $(".update-selected-visual").click( (e) => { 
+    $("#update-selected-visual").click( (e) => { 
         let currentVisual = GUI.getCurrentSelectedVisual();
         if( !currentVisual ) return;
         let targetTextarea = $(`[data-name='${$(e.currentTarget).attr("data-textarea-target")}']`).find("textarea");
-        currentVisual.Vupdate(targetTextarea.val() as string, $(e.currentTarget).attr("data-type") as WTM.renderTypes);
+        currentVisual.Vupdate( targetTextarea.val() as string, WTM.renderTypes.HTML );
     });
 
-    $(".create-visual").click( evt => { 
-        
-        if( !GUI.getCurrentSelectedProject() ) return;
+    $("#create-visual").click( evt => { 
+        let currentProject = GUI.getCurrentSelectedProject()
+        if( !currentProject ) return;
 
         let name = $("#visual-name").val() as string;
-        let projectType = GUI.getCurrentSelectedProjectTypeVisualsSection() as string;
-        WLogger.log(name + projectType);
+        let projectType = GUI.getCurrentSelectedProjectType() as string;
+        WLogger.log(`Name: ${name}, Type: ${projectType}`);
         if ( !name || name == "" ) WLogger.log("no name provided");
         if ( !projectType || projectType == "" ) WLogger.log("no projectType provided");
         if ( !name || name == "" || !projectType || projectType == "" ) {
@@ -78,8 +85,16 @@ $(document).ready(function() {
             WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
             return 
         }
-        console.log(GUI.VISUALS_PATH + name);
-        new WTM.Visual(GUI.VISUALS_PATH + name, projectType as WTM.ProjectTypes).writer.createVisual();
+        new WTM.Visual(currentProject.getVisualsPath(), name, projectType as WTM.ProjectTypes).writer.createVisual();
+    });
+    $("#create-non-existing-visuals").click( evt => { 
+        let currentProject = GUI.getCurrentSelectedProject()
+        if( !currentProject ) return;
+        let bulkVisuals: WTM.BulkVisual = new WTM.BulkVisual(  currentProject.getVisualsPath(), currentProject.getProjectType() );
+        let visuals: WTM.Visual[] = bulkVisuals.getAllVisuals();
+        for (let visual of visuals) {
+            if( !visual.isCreated()) visual.writer.createVisual();
+        }
     });
     $("#add-visual-style").click( evt => {
         let stylePath = $("#visual-style-path").val() as string;

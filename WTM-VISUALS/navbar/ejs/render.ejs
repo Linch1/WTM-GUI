@@ -1,0 +1,45 @@
+<nav id="navbar" class="open">
+    <ul class="nav-group">
+        <h5 class="group-title"> Manage </h5>
+        <li class="nav-elem"> <a href="#">Visuals</a> </li>
+        <li class="nav-elem"> <a href="#">Views</a> </li>
+        <li class="nav-elem"> <a href="#">Projects</a> </li>
+    </ul>
+    <ul class="nav-group">
+        <h5 class="group-title"> Views </h5>
+        <li class="nav-select"> 
+            <small>View Name</small>
+             <div id="[WTM-HTML-!EXEC!-VIEWS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VIEWS-SELECT" ><%-include ("/home/pero/projects/WTM/GUI/WTM-VISUALS/nav-select/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+</div>
+        </li>
+        <li class="nav-select"> 
+            <small>View Block</small>
+             <div id="[WTM-HTML-!EXEC!-VIEW-BLOCKS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VIEW-BLOCKS-SELECT" ><%-include ("/home/pero/projects/WTM/GUI/WTM-VISUALS/nav-select/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+</div>
+        </li>
+    </ul>
+    <ul class="nav-group">
+        <h5 class="group-title"> Visuals </h5>
+        <li class="nav-select"> 
+            <small>Visual Name</small>
+             <div id="[WTM-HTML-!EXEC!-VISUALS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="VISUALS-SELECT" ><%-include ("/home/pero/projects/WTM/GUI/WTM-VISUALS/nav-select/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+</div>
+        </li>
+    </ul>
+    <ul class="nav-group">
+        <h5 class="group-title"> Project Type </h5>
+        <li class="nav-select"> 
+            <small>Project Type</small>
+             <div id="[WTM-HTML-!EXEC!-PROJECTS-TYPES-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="PROJECTS-TYPES-SELECT" ><%-include ("/home/pero/projects/WTM/GUI/WTM-VISUALS/nav-select/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+</div>
+        </li>
+    </ul>
+    <ul class="nav-group">
+        <h5 class="group-title"> Projects </h5>
+        <li class="nav-select"> 
+            <small>Project Name</small>
+             <div id="[WTM-HTML-!EXEC!-PROJECTS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="PROJECTS-SELECT" ><%-include ("/home/pero/projects/WTM/GUI/WTM-VISUALS/nav-select/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+</div>
+        </li>
+    </ul>
+</nav>

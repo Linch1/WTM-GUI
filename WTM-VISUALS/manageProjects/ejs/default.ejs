@@ -3,10 +3,6 @@
         <h2>Projects</h2>
         
         <div class="form-group row mt-3">
-
-             <div id="[WTM-HTML-!EXEC!-PROJECTS-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="PROJECTS-SELECT" class="col-md-12 mb-3" ><%-include ("/home/pero/projects/WTM/GUI/WTM-VISUALS/form-select/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
-</div>
-            
             <div class="col-md-12">
                 <h4 class="text-danger">Create Project</h4>
             </div>
@@ -14,11 +10,7 @@
                 <label class="col-form-label">Name</label>
                 <input type="text" name="" id="project-name" value="new project" placeholder="Insert the project name" class="form-control">
             </div>
-            <div class="col-md-6">
-                <label class="col-form-label">projectType</label>
-                 <div id="[WTM-HTML-!EXEC!-PROJECTS-TYPES-SELECT]" data-action="!EXEC!" data-type="HTML" data-name="PROJECTS-TYPES-SELECT" ><%-include ("/home/pero/projects/WTM/GUI/WTM-VISUALS/form-select/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
-</div>
-            </div>
+     
             <div class="col-md-6">
                 <label class="col-form-label">Path</label>
                 <input type="text" name="" id="project-path" value="/home/pero/projects/WTM/GUI/" placeholder="Insert the project path" class="form-control">

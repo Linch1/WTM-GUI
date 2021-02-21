@@ -24,9 +24,7 @@ VIEWS_SELECT: string = "VIEWS-SELECT",
 VIEW_BLOCKS_SELECT: string = "VIEW-BLOCKS-SELECT",
 VIEW_DRAG_AND_DROP: string = "VIEW-INCLUDES-DRAG-AND-DROP",
 PROJECTS_SELECT: string = "PROJECTS-SELECT",
-PROJECT_PROJECTS_TYPES_SELECT: string = "PROJECTS-TYPES-SELECT",
-VIEWS_PROJECTS_TYPES_SELECT: string = "VIEWS-PROJECTS-TYPES-SELECT",
-VISUALS_PROJECTS_TYPES_SELECT: string = "VISUALS-PROJECTS-TYPES-SELECT",
+PROJECTS_TYPES_SELECT: string = "PROJECTS-TYPES-SELECT",
 ADD_SCRIPTS: string = "ADD-SCRIPTS",
 ADD_STYLES: string = "ADD-STYLES",
 
@@ -55,15 +53,22 @@ GUI.getCurrentSelectedProject = () => {
 GUI.getCurrentSelectedVisual = () => {
   WLogger.log(` Retriving selected visual `);
   let currentSelected = $(`[data-name='${VISUALS_SELECT}']`).find(":selected");
-  let visualFolderPath = currentSelected.val() as string;
+  let visualsFolder = currentSelected.attr("data-visualsPath") as string;
+  let visualName = currentSelected.attr("data-name") as string;
   let visualProjectType = currentSelected.attr("data-projectType") as string;
-  if(!visualFolderPath || !visualProjectType) return undefined;
-  if( !WTM.checkValidProjectType(visualProjectType)) {
+  if(!visualName || !visualProjectType || !visualsFolder) {
+    WLogger.log(`Folder: ${visualsFolder}, Name: ${visualName}, Type: ${visualProjectType}`);
+    WError.throw(ERRORS.MISSING_FIELDS);
+    return;
+  }
+  if( !WTM.checkValidProjectType(visualProjectType) ) {
       WLogger.log(visualProjectType);
       WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
       return 
   }
-  else return new WTM.Visual(GUI.VISUALS_PATH + visualFolderPath, visualProjectType as WTM.ProjectTypes);
+  else {
+    return new WTM.Visual(visualsFolder, visualName, visualProjectType as WTM.ProjectTypes).getVisualFiltered();
+  }
 }
 /**
  * @description returns the selected view
@@ -176,7 +181,7 @@ GUI.populateVisuals = (parentContainer: JQuery<HTMLElement>) =>  {
   if(!currentProject) return;
   
   let bulkVisuals: WTM.BulkVisual = new WTM.BulkVisual(  currentProject.getVisualsPath(), currentProject.getProjectType() );
-  let visuals: WTM.Visual[] = bulkVisuals.getAllVisuals();
+  let visuals: WTM.Visual[] = bulkVisuals.getAllVisualsFiltered();
   if( !visuals.length ) {
     let child = childSkeleton.clone();
     child.text('none');
@@ -187,11 +192,16 @@ GUI.populateVisuals = (parentContainer: JQuery<HTMLElement>) =>  {
   for (let visual of visuals) {
     let child = childSkeleton.clone();
     let name: string = visual.getName();
-    let path: string = visual.getDirPath();
-    let projectType: string = visual.getProjectType();
-    child.attr('data-path', path);
+    let text: string = `${name}-${visual.getProjectType()} 🟢 `;;
+    let projectType:  WTM.ProjectTypes = visual.getProjectType() as WTM.ProjectTypes;
+    if( visual.getProjectType() == WTM.ProjectTypes.html && currentProject.getProjectType() != WTM.ProjectTypes.html) {
+      text = `${name}-${visual.getProjectType()} 🟡 `; // type html as fallback
+    } 
+    
+    child.attr('data-name', name);
+    child.attr('data-visualsPath', currentProject.getVisualsPath())
     child.attr('data-projectType', projectType);
-    child.text(name)
+    child.text(text)
     parentContainer.append(child);
   }
 }
@@ -208,7 +218,6 @@ GUI.populateViews = (parentContainer: JQuery<HTMLElement>) => {
   if(!currentProject) return;
 
   let currentViewsPath = currentProject.getViewsPath();
-  console.log(currentViewsPath);
   let bulkViews: WTM.BulkView = new WTM.BulkView( currentViewsPath, ConstViews.viewsPrefix, currentProject.getProjectType() );
   let views: WTM.View[] = bulkViews.getAllViews();
   if( !views.length ) {
@@ -220,7 +229,6 @@ GUI.populateViews = (parentContainer: JQuery<HTMLElement>) => {
     parentContainer.append(child);
   }
   for (let view of views) {
-    console.log(view.getName())
     let child = childSkeleton.clone();
     let name: string = view.getName();
     let parentPath: string = GUI.VIEWS_PATH;
@@ -251,12 +259,10 @@ GUI.populateViewBlocks = (parentContainer: JQuery<HTMLElement>) => {
   }
 
   let viewBlocks: string[] = view.getBlocksNames();
-  console.log(viewBlocks);
   for (let block of viewBlocks) {
     let child = childSkeleton.clone();
     child.attr("data-block", block);
     child.text(block);
-    console.log(block)
     parentContainer.append(child);
   }
 }
@@ -347,11 +353,11 @@ GUI.retriveViewReorderedPaths = ():  WTM.informationsJson["blocks"] => {
   return viewBlocks; 
 }
 
-GUI.getCurrentSelectedProjectTypeProjectsSection = () => { return getSelectedProjectType(PROJECT_PROJECTS_TYPES_SELECT) };
-GUI.getCurrentSelectedProjectTypeVisualsSection = () => { return getSelectedProjectType(VISUALS_PROJECTS_TYPES_SELECT) };
-GUI.getCurrentSelectedProjectTypeViewsSection = () => { return getSelectedProjectType(VIEWS_PROJECTS_TYPES_SELECT) };
-function getSelectedProjectType( identifierDivName: string ){
-  return $(`[data-name="${identifierDivName}"`).find('select').val() as unknown as WTM.ProjectTypes;
+/**
+ * @description get the project type from the select of the types in the projects section
+ */
+GUI.getCurrentSelectedProjectType = () => {
+  return $(`[data-name="${PROJECTS_TYPES_SELECT}"`).find('select').val() as unknown as WTM.ProjectTypes;
 }
 
 /**
@@ -392,36 +398,8 @@ DefaultExecutable: {
     PROJECTS_TYPES_SELECT: {
       params: [],
       callback: () => {
-        WLogger.log(` Executing ${PROJECT_PROJECTS_TYPES_SELECT}`);
-        let replacedIdentifierTag = $(`[data-name='${PROJECT_PROJECTS_TYPES_SELECT}']`);
-        if (!replacedIdentifierTag.length) {
-          WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
-          return;
-        }
-        let parentContainer = replacedIdentifierTag.find(`[${CONTAINER_ATTR}]`);
-        GUI.populateAviableProjectsTypes(parentContainer);
-        return replacedIdentifierTag;
-      }
-    },
-    VIEWS_PROJECTS_TYPES_SELECT: {
-      params: [],
-      callback: () => {
-        WLogger.log(` Executing ${VIEWS_PROJECTS_TYPES_SELECT}`);
-        let replacedIdentifierTag = $(`[data-name='${VIEWS_PROJECTS_TYPES_SELECT}']`);
-        if (!replacedIdentifierTag.length) {
-          WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
-          return;
-        }
-        let parentContainer = replacedIdentifierTag.find(`[${CONTAINER_ATTR}]`);
-        GUI.populateAviableProjectsTypes(parentContainer);
-        return replacedIdentifierTag;
-      }
-    },
-    VISUALS_PROJECTS_TYPES_SELECT: {
-      params: [],
-      callback: () => {
-        WLogger.log(` Executing ${VISUALS_PROJECTS_TYPES_SELECT}`);
-        let replacedIdentifierTag = $(`[data-name='${VISUALS_PROJECTS_TYPES_SELECT}']`);
+        WLogger.log(` Executing ${PROJECTS_TYPES_SELECT}`);
+        let replacedIdentifierTag = $(`[data-name='${PROJECTS_TYPES_SELECT}']`);
         if (!replacedIdentifierTag.length) {
           WError.throw(ERRORS.NO_IDENTIFIER_FOUND);
           return;
@@ -465,7 +443,7 @@ DefaultExecutable: {
         $(`[data-name='${VISUALS_SELECT}']`).change( evt => {
           
           let visual = GUI.getCurrentSelectedVisual();
-          if(!visual) return;
+          if(!visual || !visual.isCreated() ) return;
 
           $(`[data-name='${VISUALS_TEXTAREA}']`).find("textarea").val(visual.getHtmlDefault());
         });

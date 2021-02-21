@@ -18,7 +18,7 @@ $(document).ready(function() {
         if( !currentProject ) return;
         
         let name = $("#view-name").val() as string;
-        let projectType = GUI.getCurrentSelectedProjectTypeViewsSection() as string;
+        let projectType = GUI.getCurrentSelectedProjectType() as string;
         console.log(projectType);
         WLogger.log(name + projectType);
         if ( !name || name == "" ) WLogger.log("no name provided");
@@ -77,7 +77,6 @@ $(document).ready(function() {
         if(!visual || !currentView || !currentBlock) return;
 
         let renderPath = visual.getRenderFilePath();
-        console.log(renderPath, visual.getDirPath())
         if( renderPath.includes(GUI.TEMPLATE_PATH)) renderPath = renderPath.replace(GUI.TEMPLATE_PATH, "");
         currentView.includeRelative(
             currentBlock,

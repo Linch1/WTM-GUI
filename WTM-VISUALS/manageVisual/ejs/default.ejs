@@ -1,0 +1,89 @@
+<section id="manage-visuals">
+    <div class="container">
+        <h2 class="mb-3">Visuals</h2>
+        <div class="actions">
+            
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Create Visual</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group section-block">
+                            <label class="col-form-label">name</label>
+                            <input id="visual-name" type="text" placeholder="Insert the visual name" class="form-control">
+                            <button class="create-visual btn btn-primary" >Create Visual</button> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Add Script</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group  ">
+                            <label class="col-form-label">Script Path</label>
+                            <input id="visual-script-path" type="text" name=""  value="" placeholder="Insert path to a script" class="form-control">
+                            <button id="add-visual-script" class="btn btn-primary">Add Script</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Add Style</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group ">
+                            <label class="col-form-label">Style Path</label>
+                            <input id="visual-style-path" type="text" name=""  value="" placeholder="Insert path to a style" class="form-control">
+                            <button id="add-visual-style" class="btn btn-primary">Add Style</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Update Selected Visual</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group section-block">
+                            [WTM-HTML-!EXEC!-VISUALS-TEXTAREA]
+                            <button id="update-selected-visual" class="btn btn-primary" data-select-target="VISUALS-SELECT" data-textarea-target="VISUALS-TEXTAREA" >update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Actions</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group section-block">
+                            <button id="create-non-existing-visuals" class="btn btn-primary"> Create non existing visuals </button>
+                            <button id="render-visuals" class=" btn btn-success">render Visuals Html</button>
+                            <button id="render-selected-visual" class=" btn btn-primary" data-select-target="VISUALS-SELECT">render Selected Visual Html</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
