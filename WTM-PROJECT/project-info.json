@@ -1,1 +1,56 @@
-{"name":"new project","projectType":"ejs","viewsPath":"/home/pero/projects/WTM/GUI/WTM-VIEWS","visualsPath":"/home/pero/projects/WTM/GUI/WTM-VISUALS","path":"/home/pero/projects/WTM/GUI/","scripts":[],"styles":["https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css","https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"],"visualsDependencies":{"common":{"scripts":[],"styles":["/home/pero/projects/WTM/GUI/WTM-VISUALS/common/html/assets/css/common.css","/home/pero/projects/WTM/GUI/WTM-VISUALS/common/html/assets/css/typo.css"]},"drag-drop":{"scripts":["https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js","/home/pero/projects/WTM/GUI/WTM-VISUALS/drag-drop/ejs/assets/js/script.js"],"styles":["/home/pero/projects/WTM/GUI/WTM-VISUALS/drag-drop/ejs/assets/css/style.css"]},"navbar":{"scripts":[],"styles":["/home/pero/projects/WTM/GUI/WTM-VISUALS/navbar/ejs/assets/css/style.css"]}}}
+{
+  "name": "new project",
+  "projectType": "ejs",
+  "viewsPath": "/home/pero/projects/WTM/GUI/WTM-VIEWS",
+  "visualsPath": "/home/pero/projects/WTM/GUI/WTM-VISUALS",
+  "path": "/home/pero/projects/WTM/GUI/",
+  "scripts": ["WTM-PROJECT/assets/js/script.js"],
+  "styles": [
+    "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css",
+    "https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css",
+    "WTM-PROJECT/assets/css/common.css",
+    "WTM-PROJECT/assets/css/typo.css"
+  ],
+  "visualsDependencies": {
+    "common": {
+      "scripts": [
+        "WTM-VISUALS/common/html/assets/js/asd/test.js",
+        "WTM-VISUALS/common/html/assets/js/test.js"
+      ],
+      "styles": [
+        "WTM-VISUALS/common/html/assets/css/asd/asd/test.js",
+        "WTM-VISUALS/common/html/assets/css/test.css"
+      ]
+    },
+    "drag-drop": {
+      "scripts": ["WTM-VISUALS/drag-drop/ejs/assets/js/script.js"],
+      "styles": ["WTM-VISUALS/drag-drop/ejs/assets/css/style.css"]
+    },
+    "folderTree": {
+      "scripts": ["WTM-VISUALS/folderTree/ejs/assets/js/script.js"],
+      "styles": ["WTM-VISUALS/folderTree/ejs/assets/css/style.css"]
+    },
+    "manageProjects": {
+      "scripts": ["WTM-VISUALS/manageProjects/ejs/assets/js/script.js"],
+      "styles": []
+    },
+    "navbar": {
+      "scripts": ["WTM-VISUALS/navbar/ejs/assets/js/script.js"],
+      "styles": ["WTM-VISUALS/navbar/ejs/assets/css/style.css"]
+    }
+  },
+  "lib": {
+    "new": {
+      "cdn": {
+        "scripts": [
+          "https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js"
+        ],
+        "styles": []
+      },
+      "url": "asd",
+      "scripts": [],
+      "styles": [],
+      "visuals": []
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import * as WTM from "wtm-lib";
+import { StringComposeWriter } from "wtm-lib";
 import { ERRORS } from "../Errors/Errors";
 import { WError } from "../Errors/WtmError";
 import { WLogger } from "../Logger/WLogger";
@@ -26,16 +27,17 @@ function renderVisuals(visuals: WTM.Visual[], type: WTM.renderTypes){
  * @param type the render type
  */
 function renderVisual(visual: WTM.Visual, type: WTM.renderTypes){
+    let currentProject = GUI.getCurrentSelectedProject();
     if( visual.isCreated() ) {
         WLogger.log(`Compiling visual ${visual.getName()}. Type: ${type}`);
         visual.writer.populateIdentifiers();
-        visual.converter.render(type);
+        visual.converter.render(type, currentProject);
     } else {
         let fbVisual = visual.getFallbackVisual();
         WLogger.log(`FALLBACK: Compiling visual ${visual.getName()}. Type: ${type}`);
         if( fbVisual ) {
             fbVisual.writer.populateIdentifiers();
-            fbVisual.converter.render(type);
+            fbVisual.converter.render(type, currentProject);
         };
     }
 
@@ -44,6 +46,7 @@ $(document).ready(function() {
 
     $("#render-visuals").click( (e) => { 
         let currentProject = GUI.getCurrentSelectedProject();
+        console.log(currentProject)
         if(!currentProject) return;
         let bulk: WTM.BulkVisual = new WTM.BulkVisual(currentProject.getVisualsPath(), currentProject.getProjectType());
         renderVisuals(
@@ -67,26 +70,38 @@ $(document).ready(function() {
         currentVisual.Vupdate( targetTextarea.val() as string, WTM.renderTypes.HTML );
     });
 
-    $("#create-visual").click( evt => { 
+    //@ts-ignore
+    $("#add-visual-form").parsley()
+    $("#add-visual-form").submit( evt => {
+        evt.preventDefault();
         let currentProject = GUI.getCurrentSelectedProject()
         if( !currentProject ) return;
 
-        let name = $("#visual-name").val() as string;
+        let form = $("#add-visual-form");
+        let name = GUI.getFormElementValue(form.find(".visual-name")) as string;
+        let automaticallyAddIMports = GUI.getFormElementValue(form.find(".import-all-lib")) as boolean;
+        let author = GUI.getFormElementValue(form.find(".visual-author")) as string;
+        let authorUrl = GUI.getFormElementValue(form.find(".visual-author-url")) as string;
+        let githubRepo = GUI.getFormElementValue(form.find(".visual-github-repo")) as string;
         let projectType = GUI.getCurrentSelectedProjectType() as string;
-        WLogger.log(`Name: ${name}, Type: ${projectType}`);
-        if ( !name || name == "" ) WLogger.log("no name provided");
-        if ( !projectType || projectType == "" ) WLogger.log("no projectType provided");
-        if ( !name || name == "" || !projectType || projectType == "" ) {
-            WError.throw(ERRORS.NO_NAME_OR_PORJECT_TYPE_PROVIDED); 
-            return
-        }
-        if( !WTM.checkValidProjectType(projectType)) {
-            WLogger.log(projectType);
-            WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
-            return 
-        }
-        new WTM.Visual(currentProject.getVisualsPath(), name, projectType as WTM.ProjectTypes).writer.createVisual();
+        
+        new WTM.Visual(currentProject.getVisualsPath(), {
+            name: name,
+            projectPath: currentProject.getPath(),
+            projectType: projectType as WTM.ProjectTypes,
+            assetsAutoImport: automaticallyAddIMports,
+            author: author,
+            authorUrl: authorUrl,
+            githubRepo: githubRepo
+        }).writer.createVisual();
     });
+
+    $("#import-visual-assets").click( evt => {
+        let currentVisual = GUI.getCurrentSelectedVisual();
+        if( !currentVisual ) return;
+        currentVisual.depManager.autoImportAllCssAndJs();
+    });
+
     $("#create-non-existing-visuals").click( evt => { 
         let currentProject = GUI.getCurrentSelectedProject()
         if( !currentProject ) return;
@@ -96,24 +111,44 @@ $(document).ready(function() {
             if( !visual.isCreated()) visual.writer.createVisual();
         }
     });
-    $("#add-visual-style").click( evt => {
-        let stylePath = $("#visual-style-path").val() as string;
-        if ( !stylePath || stylePath == "" ) {
-            WLogger.log("no path provided");
-            WError.throw(ERRORS.NO_PATH_PROVIDED);
-        }
+
+    //@ts-ignore
+    $("#add-visual-style-form").parsley()
+    $("#add-visual-style-form").submit( evt => {
+        evt.preventDefault();
+        let form = $("#add-visual-style-form");
+        let stylePath = GUI.getFormElementValue(form.find(".visual-style-path")) as string;
+        if( stylePath.includes('./') ) stylePath = stylePath.replace( './', '');
         let currentVisual = GUI.getCurrentSelectedVisual();
         if(!currentVisual) return;
-        currentVisual.writer.addStyle(stylePath);
+        currentVisual.depManager.addStyle(stylePath);
     });
-    $("#add-visual-script").click( evt => {
-        let scriptPath = $("#visual-script-path").val() as string;
+
+    //@ts-ignore
+    $("#add-visual-script-form").parsley()
+    $("#add-visual-script-form").submit( evt => {
+        evt.preventDefault();
+        let form = $("#add-visual-script-form");
+        let scriptPath = GUI.getFormElementValue(form.find(".visual-script-path")) as string;
         if ( !scriptPath || scriptPath == "" ) {
             WLogger.log("no path provided");
             WError.throw(ERRORS.NO_PATH_PROVIDED);
         }
         let currentVisual = GUI.getCurrentSelectedVisual();
+        console.log( currentVisual );
         if(!currentVisual) return;
-        currentVisual.writer.addScript(scriptPath);
+        currentVisual.depManager.addScript(scriptPath);
     });
+
+    $("#add-folder-tree-selected-files").click( evt => {
+        let stylesPaths = GUI.getCurrentSelectedFolderTreeFiles(".visuals-styles .folder-path");
+        let scriptsPaths = GUI.getCurrentSelectedFolderTreeFiles(".visuals-scripts .folder-path");
+        let currentVisual = GUI.getCurrentSelectedVisual();
+        if(!currentVisual) return;
+        currentVisual.depManager.setScripts(scriptsPaths);
+        currentVisual.depManager.setStyles(stylesPaths);
+    });
+
+    
+
 });

@@ -1,0 +1,46 @@
+.folder-path{
+  list-style: none;
+}
+
+.folder-path .folder-path,
+.folder-path .folder-file {
+  padding-left: 30px;
+}
+
+
+.folder-path {
+  height: auto;
+  overflow: hidden;
+}
+.folder-path.close-folder .folder-file,
+.folder-path.close-folder .folder-path {
+  height: 0;
+}
+.folder-path header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.folder-path header span {
+  color: #007bff;
+}
+.folder-path header img {
+  margin-right: 5px;
+  width: 16px;
+  height: 22px;
+}
+.folder-path.close-folder header #folder-open {
+  display: none;
+} .folder-path.close-folder header #folder-close {
+  display: block;
+}
+
+.folder-path header #folder-open {
+  display: block;
+} .folder-path header #folder-close {
+  display: none;
+}
+
+.folder-file {
+  color: #28a745;
+}

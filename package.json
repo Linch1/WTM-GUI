@@ -20,8 +20,10 @@
     },
     "homepage": "https://github.com/Linch1/WTM-GUI#readme",
     "devDependencies": {
-        "electron": "11.2.0",
-        "typescript": "^4.1.3"
+        "@electron/remote": "^1.0.4",
+        "@types/electron": "^1.6.10",
+        "electron": "^12.0.0-beta.1",
+        "typescript": "^4.2.2"
     },
     "dependencies": {
         "@types/jquery": "^3.5.5",

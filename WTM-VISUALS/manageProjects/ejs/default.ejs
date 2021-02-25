@@ -66,6 +66,107 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Add Lib</h6>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-group row" id="add-project-lib-form">
+                            <div class="col-md-12">
+                                <label class="col-form-label">Lib Name</label>
+                                <input class="pj-lib-name form-control" type="text" name="" value="" placeholder="Insert the lib name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label">Lib Site Url</label>
+                                <input class="pj-lib-site-url form-control" type="text" name="" value="" placeholder="Insert where the lib can be downloadable">
+                                <small>The given Path must be the path to the directory that contains the lib files</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label">Lib CDN</label>
+                                <input class="pj-lib-cdn form-control" type="text" name="" value="" placeholder="Insert the lib cdn" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label">Lib Content</label>
+                                <div class="custom-file">
+                                    <input class="pj-lib-folder custom-file-input" type="file"  webkitdirectory directory multiple>
+                                    <label class="pj-lib-folder-label custom-file-label" for="pj-lib-folder">Choose file</label>
+                                </div>
+                                <small>The uploaded directory must be the directory that contains the lib files</small>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="btn btn-primary">Add </button>
+                            </div>
+                            
+                        </form>
+                        
+                        
+                    </div>
+               
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Add lib Cdn</h6>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-group row" id="add-project-lib-cdn-form">
+                            
+                            <div class="col-md-12">
+                                <label class="col-form-label">Lib CDN</label>
+                                <input class="pj-lib-cdn form-control" type="text" name="" value="" placeholder="Insert the lib cdn" required>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button class="btn btn-primary">Add </button>
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Replace/Add lib content</h6>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-group row" id="replace-project-lib-content">
+                            
+                            <div class="col-md-12">
+                                <label class="col-form-label">Lib Content</label>
+                                <div class="custom-file">
+                                    <input class="pj-lib-folder custom-file-input" type="file" webkitdirectory directory multiple >
+                                    <label class="pj-lib-folder-label custom-file-label">Choose file</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button class="btn btn-primary">Add </button>
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Lib Tree </h6>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-group row" id="add-project-lib-form">
+                            [WTM-HTML-!EXEC!-FOLDER-TREE-LIB  visualTarget="folderTree"  parentClasses="mt-2 col-md-12 lib-files" ]
+                            <div class="col-md-12">
+                                <button id="add-lib-selected-files" class="btn btn-primary">Add selected files</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="form-group row mt-3">
                     

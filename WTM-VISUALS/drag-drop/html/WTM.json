@@ -1,1 +1,15 @@
-{"visual":{"name":"drag-drop","projectType":"html"},"identifiers":{"HTML":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{}},"ACF":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{}}},"dependencies":{"scripts":[],"styles":[]},"connected":{}}
+{
+  "name": "drag-drop",
+  "projectPath": "/home/pero/projects/WTM/GUI/",
+  "projectType": "html",
+  "assetsAutoImport": true,
+  "author": "",
+  "authorUrl": "",
+  "githubRepo": "",
+  "identifiers": {
+    "HTML": { "!STATIC!": {}, "!ALL!": {}, "!EXEC!": {} }
+  },
+  "dependencies": { "scripts": [], "styles": [] },
+  "lib": {},
+  "connected": {}
+}

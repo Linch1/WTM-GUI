@@ -1,1 +1,1 @@
-{"visual":{"name":"footer","projectType":"ejs"},"identifiers":{"HTML":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{"ADD-SCRIPTS":{}}},"ACF":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{}}},"dependencies":{"scripts":[],"styles":[]}}
+{"name":"footer","projectPath":"/home/pero/projects/WTM/GUI/","projectType":"ejs","assetsAutoImport":false,"author":"","authorUrl":"","githubRepo":"","identifiers":{"HTML":{"!STATIC!":{},"!ALL!":{},"!EXEC!":{"ADD-SCRIPTS":{}}}},"dependencies":{"scripts":[],"styles":[]},"lib":{}}

@@ -26,6 +26,10 @@ h1, h2, h3, h4, h5, h6{
     margin-bottom: 0;
 }
 
+ul{
+    padding-left: 0;
+}
+
 #main{
     padding-top: 50px;
 }
@@ -38,4 +42,8 @@ h1, h2, h3, h4, h5, h6{
 }
 .card .card-header h6{
     font-weight: 400;
+}
+
+[data-skeleton] {
+    display: none;
 }

@@ -2,20 +2,93 @@
     <div class="container">
         <h2 class="mb-3">Visuals</h2>
         <div class="actions">
-            
+            [WTM-PLACEHOLDER-VS-ASSETS-IMAGES]
+            <br>
+            [WTM-PLACEHOLDER-VS-ASSETS-JS]
+            <br>
+            [WTM-PLACEHOLDER-VS-ASSETS-CSS]
+            <br>
+            [WTM-PLACEHOLDER-PJ-ASSETS]
+            <br>
+            [WTM-PLACEHOLDER-PJ-PATH]
+            <br>
+            [WTM-PLACEHOLDER-PJ-ASSETS-CSS]
+            <br>
+            [WTM-PLACEHOLDER-PJ-ASSETS-JS]
+            <br>
+            [WTM-PLACEHOLDER-PJ-ASSETS-IMAGES]
         </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Actions</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group section-block">
+                            <button id="create-non-existing-visuals" class="btn btn-primary"> Create non existing visuals </button>
+                            <button id="render-visuals" class=" btn btn-success">render Visuals Html</button>
+                            <button id="render-selected-visual" class=" btn btn-primary" data-select-target="VISUALS-SELECT">render Selected Visual Html</button>
+                            <button id="import-visual-assets" class="btn btn-primary"> Auto Import Selected Visual Assets </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <h6>Create Visual</h6>
                     </div>
-                    <div class="card-body">
-                        <div class="form-group section-block">
+                    <form class="card-body row" id="add-visual-form" >
+                        <div class="form-group col-md-6">
                             <label class="col-form-label">name</label>
-                            <input id="visual-name" type="text" placeholder="Insert the visual name" class="form-control">
-                            <button class="create-visual btn btn-primary" >Create Visual</button> 
+                            <input class="visual-name form-control" type="text" placeholder="Insert the visual name"  required>
                         </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-form-label">Author</label>
+                            <input class="visual-author form-control" type="text" placeholder="Insert the visual name"  >
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-form-label">Author Url</label>
+                            <input class="visual-author-url form-control" type="text" placeholder="Insert the visual name"  >
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-form-label">Github Repo</label>
+                            <input class="visual-github-repo form-control" type="text" placeholder="Insert the visual name"  >
+                        </div>
+                        <div class="form-group col-md-12">
+                            <input type="checkbox" class="import-all-lib">
+                            <label class="col-form-label mt-3 mb-0 p-0">Always automatically import all the visual styles/scripts</label>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <button class="create-visual btn btn-primary">Create Visual</button> 
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Visual Assets</h6>
+                    </div>
+                    <div class="card-body row"  >
+                        <div class="col-md-6">
+                            <h5>Scripts</h5>
+                            [WTM-HTML-!EXEC!-FOLDER-TREE-VISUALS-SCRIPTS  visualTarget="folderTree"  parentClasses="mt-2 visuals-scripts" ]
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Styles</h5>
+                            [WTM-HTML-!EXEC!-FOLDER-TREE-VISUALS-STYLES  visualTarget="folderTree"  parentClasses="mt-2 visuals-styles" ]
+                        </div>
+                        
+                        <button id="add-folder-tree-selected-files" class="btn btn-primary">Add selected files</button>
                     </div>
                 </div>
             </div>
@@ -27,13 +100,13 @@
                     <div class="card-header">
                         <h6>Add Script</h6>
                     </div>
-                    <div class="card-body">
+                    <form class="card-body" id="add-visual-script-form">
                         <div class="form-group  ">
                             <label class="col-form-label">Script Path</label>
-                            <input id="visual-script-path" type="text" name=""  value="" placeholder="Insert path to a script" class="form-control">
-                            <button id="add-visual-script" class="btn btn-primary">Add Script</button>
+                            <input class="visual-script-path form-control" type="text" name="" value="" placeholder="Insert path to a script" required>
                         </div>
-                    </div>
+                        <button class="btn btn-primary">Add </button>
+                    </form>
                 </div>
             </div>
             <div class="col-md-6">
@@ -41,12 +114,80 @@
                     <div class="card-header">
                         <h6>Add Style</h6>
                     </div>
-                    <div class="card-body">
+                    <form class="card-body" id="add-visual-style-form">
                         <div class="form-group ">
                             <label class="col-form-label">Style Path</label>
-                            <input id="visual-style-path" type="text" name=""  value="" placeholder="Insert path to a style" class="form-control">
-                            <button id="add-visual-style" class="btn btn-primary">Add Style</button>
+                            <input class="visual-style-path form-control" type="text" name="" value="" placeholder="Insert path to a style" required>
                         </div>
+                        <button class="btn btn-primary">Add </button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Add CDN</h6>
+                    </div>
+                    <form class="card-body row" id="add-visual-cdn-form">
+                        <div class="form-group col-md-6">
+                            <label class="col-form-label">Lib Name</label>
+                            <input required id="visual-style-path" type="text" name="" value="" placeholder="Insert path to a style" class="form-control">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-form-label">Cdn url</label>
+                            <input required id="visual-style-path" type="text" name="" value="" placeholder="Insert path to a style" class="form-control">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <button id="add-visual-style" class="btn btn-primary">Add </button>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Import Lib Files</h6>
+                    </div>
+                    <div class="card-body">
+                        
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label class="col-form-label">Lib Select</label>
+                                <select name="" id=""></select>
+                            </div>
+                            <h3> Reppresentazione grafica della directory della lib scelta e delle sue cdn</h3>
+                            <div class="col-md-6">
+                                <label class="col-form-label">Lib Style</label>
+                                <input id="lib-content-path" type="text" name="" value="" placeholder="Insert the lib content path" class="form-control">
+                                <small>Path relative to the lib folder</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label">Lib Script</label>
+                                <input id="lib-content-path" type="text" name="" value="" placeholder="Insert the lib content path" class="form-control">
+                                <small>Path relative to the lib folder</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label">Lib CDN</label>
+                                <input id="lib-cdn" type="text" name="" value="" placeholder="Insert the lib cdn" class="form-control">
+                                <small>The given Path must be the path to the directory that contains the lib files</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label">Lib Any</label>
+                                <input id="lib-content-path" type="text" name="" value="" placeholder="Insert the lib content path" class="form-control">
+                                <small>Path relative to the lib folder</small>
+                            </div>
+                            
+                           
+                            <div class=" col-md-12">
+                                <input type="checkbox" class="" id="import-all-lib">
+                                <label class="col-form-label mt-3 mb-0 p-0" for="import-all-lib">Import all the lib files</label>
+                                <small class="d-block">Import as project dependencies all the files of the lib </small>
+                            </div>
+                            
+                        </div>
+                        
+                        <button id="add-visual-style" class="btn btn-primary">Add </button>
                     </div>
                 </div>
             </div>
@@ -61,29 +202,14 @@
                     <div class="card-body">
                         <div class="form-group section-block">
                             [WTM-HTML-!EXEC!-VISUALS-TEXTAREA]
-                            <button id="update-selected-visual" class="btn btn-primary" data-select-target="VISUALS-SELECT" data-textarea-target="VISUALS-TEXTAREA" >update</button>
+                            <button id="update-selected-visual" class="btn btn-primary" data-select-target="VISUALS-SELECT" data-textarea-target="VISUALS-TEXTAREA">update</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h6>Actions</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group section-block">
-                            <button id="create-non-existing-visuals" class="btn btn-primary"> Create non existing visuals </button>
-                            <button id="render-visuals" class=" btn btn-success">render Visuals Html</button>
-                            <button id="render-selected-visual" class=" btn btn-primary" data-select-target="VISUALS-SELECT">render Selected Visual Html</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
 
     </div>
 </section>
