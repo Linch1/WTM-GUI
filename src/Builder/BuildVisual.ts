@@ -117,7 +117,10 @@ $(document).ready(function() {
         let bulkVisuals: WTM.BulkVisual = new WTM.BulkVisual(  currentProject.getVisualsPath(), currentProject.getProjectType() );
         let visuals: WTM.Visual[] = bulkVisuals.getAllVisuals();
         for (let visual of visuals) {
-            if( !visual.isCreated()) visual.writer.createVisual();
+            if( !visual.isCreated()) {
+                visual.writer.createVisual();
+                visual.writer.setProjectPath( currentProject.getPath() );
+            }
         }
     });
 

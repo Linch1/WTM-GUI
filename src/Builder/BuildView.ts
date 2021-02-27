@@ -77,7 +77,7 @@ $(document).ready(function() {
         if(!visual || !currentView || !currentBlock) return;
 
         let renderPath = visual.getRenderFilePath();
-        if( renderPath.includes(GUI.TEMPLATE_PATH)) renderPath = renderPath.replace(GUI.TEMPLATE_PATH, "");
+        if( renderPath.includes(GUI.TEMPLATE_PATH) ) renderPath = renderPath.replace(GUI.TEMPLATE_PATH, "");
         currentView.includeRelative(
             currentBlock,
             renderPath

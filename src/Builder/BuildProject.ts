@@ -9,24 +9,59 @@ const dialog = remote.dialog;
 const GUI = window.WTM_GUI;
 
 $(document).ready(function() {
+
+    $(".pj-folder").click( async evt => {
+        evt.preventDefault();
+        let target = $(evt.currentTarget);
+        var path = await dialog.showOpenDialog( 
+            remote.getCurrentWindow(), {
+            properties: ['openDirectory']
+            }
+        ).then( (value) => value.filePaths[0] );
+        target.attr("data-dialog-path", path);
+        target.parent().find(".pj-folder-label").text( StringComposeReader.getPathLastElem(path))
+    });
+    $(".pj-folder-visuals").click( async evt => {
+        evt.preventDefault();
+        let target = $(evt.currentTarget);
+        var path = await dialog.showOpenDialog( 
+            remote.getCurrentWindow(), {
+            properties: ['openDirectory']
+            }
+        ).then( (value) => value.filePaths[0] );
+        target.attr("data-dialog-path", path);
+        target.parent().find(".pj-folder-visuals-label").text( StringComposeReader.getPathLastElem(path))
+    });
+    $(".pj-folder-views").click( async evt => {
+        evt.preventDefault();
+        let target = $(evt.currentTarget);
+        var path = await dialog.showOpenDialog( 
+            remote.getCurrentWindow(), {
+            properties: ['openDirectory']
+            }
+        ).then( (value) => value.filePaths[0] );
+        target.attr("data-dialog-path", path);
+        target.parent().find(".pj-folder-views-label").text( StringComposeReader.getPathLastElem(path))
+    });
     
 
     $("#create-project").click( evt => {
         let name = $("#project-name").val() as string;
         let projectType = GUI.getCurrentSelectedProjectType() as string;
-        let path = $("#project-path").val() as string;
-        let visualsPath = $("#project-visuals").val() as string;
-        let viewsPath = $("#project-views").val() as string;
+        let form = $("#add-project-form");
+        let path = GUI.getFormElementValue(form.find(".pj-folder")) as string;
+        let visualsPath = GUI.getFormElementValue(form.find(".pj-folder-visuals")) as string;
+        let viewsPath = GUI.getFormElementValue(form.find(".pj-folder-views")) as string;
         let correct = true;
         if ( !name || name == "" ) { WLogger.log("no name provided"); correct = false}
         if ( !projectType || projectType == "" ) { WLogger.log("no projectType provided"); correct = false}
         if ( !path || path == "" ) { WLogger.log("no path provided"); correct = false}
-        if ( !visualsPath || visualsPath == "" ) { visualsPath = WTM.StringComposeWriter.concatenatePaths(path, WTM.ConstVisuals.Directory)}
-        if ( !viewsPath || viewsPath == "" ) { viewsPath = WTM.StringComposeWriter.concatenatePaths(path, WTM.ConstViews.Directory) }
         if ( !correct ) {
             WError.throw(ERRORS.NO_NAME_OR_PORJECT_TYPE_PROVIDED); 
             return;
         }
+        if ( !visualsPath || visualsPath == "" ) { visualsPath = WTM.StringComposeWriter.concatenatePaths(path, WTM.ConstVisuals.Directory)}
+        if ( !viewsPath || viewsPath == "" ) { viewsPath = WTM.StringComposeWriter.concatenatePaths(path, WTM.ConstViews.Directory) }
         if ( GUI.PROJECTS.getProjectByName(name) ){
             WError.throw(ERRORS.PROJECT_ALREADY_PRESENT); 
             return;

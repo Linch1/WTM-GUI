@@ -358,7 +358,7 @@ GUI.populateViews = (parentContainer: JQuery<HTMLElement>) => {
 
   let currentProject = GUI.getCurrentSelectedProject();
   if (!currentProject) return;
-
+  
   let currentViewsPath = currentProject.getViewsPath();
   let bulkViews: WTM.BulkView = new WTM.BulkView(
     currentViewsPath,
@@ -378,7 +378,7 @@ GUI.populateViews = (parentContainer: JQuery<HTMLElement>) => {
   for (let view of views) {
     let child = childSkeleton.clone();
     let name: string = view.getName();
-    let parentPath: string = GUI.VIEWS_PATH;
+    let parentPath: string = currentProject.getPath();
     let projectType: WTM.ProjectTypes = view.getProjectType();
     child.attr("data-parentPath", parentPath);
     child.attr("data-projectType", projectType);

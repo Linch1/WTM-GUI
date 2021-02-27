@@ -67,10 +67,12 @@ DefaultExecutable: {
           let visualsContainer = $(`[data-name='${VISUALS_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
           let blockContainer = $(`[data-name='${VIEW_BLOCKS_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
           let libContainer = $(`[data-name='${PROJECTS_LIB_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
+          let projectTypesContainer = $(`[data-name='${PROJECTS_TYPES_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
           GUI.populateViews(viewsContainer);
           GUI.populateViewBlocks(blockContainer);
           GUI.populateVisuals(visualsContainer);
           GUI.populateAviableProjectsLib(libContainer);
+          GUI.populateAviableProjectsTypes(projectTypesContainer);
 
           let currentProject = GUI.getCurrentSelectedProject();
           if(!currentProject ) return;
@@ -122,6 +124,7 @@ DefaultExecutable: {
             files: cdnScripts
           }
           GUI.populateFolderTree($(`[data-name='${FOLDER_TREE_LIB_CDN_SCRIPTS}']`), cdnTreeScripts, ["js"]);
+          
 
         });
 

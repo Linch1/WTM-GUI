@@ -17,24 +17,31 @@
                             <i class='bx bx-chevron-down arrow-down'></i>
                         </div>
                     </div>
-                    <form class="card-body row" id="add-visual-form" >
+                    <form class="card-body row" id="add-project-form" >
                         <div class="form-group col-md-6">
                             <label class="col-form-label">name</label>
                             <input type="text" name="" id="project-name" value="new project" placeholder="Insert the project name" class="form-control" required>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="col-md-6">
                             <label class="col-form-label">Path</label>
-                            <input type="text" name="" id="project-path" value="/home/pero/projects/WTM/GUI/" placeholder="Insert the project path" class="form-control" required>
+                            <div class="custom-file">
+                                <input class="pj-folder custom-file-input" type="file" webkitdirectory directory multiple>
+                                <label class="pj-folder-label custom-file-label">Choose Directory</label>
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label class="col-form-label">Views Path</label>
-                            <input type="text" name="" id="project-views" value="" placeholder="Insert the project views path" class="form-control">
-                            <small>Empty for default one</small>
+                        <div class="col-md-6">
+                            <label class="col-form-label">Views path</label>
+                            <div class="custom-file">
+                                <input class="pj-folder-views custom-file-input" type="file" webkitdirectory directory multiple>
+                                <label class="pj-folder-views-label custom-file-label">Choose Directory</label>
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label class="col-form-label">Visuals Path</label>
-                            <input type="text" name="" id="project-visuals" value="" placeholder="Insert the project visuals path" class="form-control">
-                            <small>Empty for default one</small>
+                        <div class="col-md-6">
+                            <label class="col-form-label">Visuals path</label>
+                            <div class="custom-file">
+                                <input class="pj-folder-visuals custom-file-input" type="file" webkitdirectory directory multiple>
+                                <label class="pj-folder-visuals-label custom-file-label">Choose Directory</label>
+                            </div>
                         </div>
                         <div class="form-group col-md-12">
                             <button id="create-project" class="btn btn-primary">Create Project</button>
