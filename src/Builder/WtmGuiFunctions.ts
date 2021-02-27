@@ -15,10 +15,10 @@ GUI.PROJECTS = new WTM.BulkProjects(GUI.TEMPLATE_PATH);
 GUI.WLogger = WLogger.log;
 
 const VISUALS_SELECT: string = "VISUALS-SELECT",
-  VISUALS_TEXTAREA: string = "VISUALS-TEXTAREA",
   VIEWS_SELECT: string = "VIEWS-SELECT",
   VIEW_BLOCKS_SELECT: string = "VIEW-BLOCKS-SELECT",
-  VIEW_DRAG_AND_DROP: string = "VIEW-INCLUDES-DRAG-AND-DROP",
+  DRAG_DROP_VIEW: string = "DRAG-DROP-VIEW",
+  DRAG_DROP_LIB: string = "DRAG-DROP-LIB",
   PROJECTS_SELECT: string = "PROJECTS-SELECT",
   PROJECTS_LIB_SELECT: string = "PROJECTS-LIB-SELECT",
   PROJECTS_TYPES_SELECT: string = "PROJECTS-TYPES-SELECT",
@@ -29,7 +29,9 @@ const VISUALS_SELECT: string = "VISUALS-SELECT",
   CONTAINER_CHILD_ATTR = "data-to-populate",
   CONTAINER_HEADER_ATTR = "data-header",
   CONTAINER_HEADER_TEXT = "data-header-text",
-  CONTAINER_CHILD_TEXT = "data-child-text";
+  CONTAINER_CHILD_TEXT = "data-child-text",
+
+  EMPTY_VAL = "none";
 
 
 
@@ -87,17 +89,19 @@ GUI.getCurrentSelectedVisual = () => {
   let visualsFolder = currentSelected.attr("data-visualsPath") as string;
   let visualName = currentSelected.attr("data-name") as string;
   let visualProjectType = currentSelected.attr("data-projectType") as string;
+  if( currentSelected.val() == EMPTY_VAL ) return undefined;
+
   if (!visualName || !visualProjectType || !visualsFolder) {
     WLogger.log(
       `Folder: ${visualsFolder}, Name: ${visualName}, Type: ${visualProjectType}`
     );
     WError.throw(ERRORS.MISSING_FIELDS);
-    return;
+    return undefined;
   }
   if (!WTM.checkValidProjectType(visualProjectType)) {
     WLogger.log(visualProjectType);
     WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
-    return;
+    return undefined;
   } else {
     return new WTM.Visual(
       visualsFolder,
@@ -119,6 +123,7 @@ GUI.getCurrentSelectedView = () => {
   let parentAbsPath = currentSelectedView.attr("data-parentPath") as string;
   let name = currentSelectedView.attr("data-name") as string;
   let projectType = currentSelectedView.attr("data-projectType") as string;
+  if( currentSelectedView.val() == EMPTY_VAL ) return undefined;
   if (!parentAbsPath || !name || !projectType) return undefined;
   if (!WTM.checkValidProjectType(projectType)) {
     WLogger.log(projectType);
@@ -133,11 +138,28 @@ GUI.getCurrentSelectedView = () => {
 GUI.getCurrentSelectedViewBlock = () => {
   WLogger.log(` Retriving selected block `);
   let block = $(`[data-name='${VIEW_BLOCKS_SELECT}']`)
-    .find(":selected")
-    .attr("data-block") as string;
-  if (!block) return undefined;
-  else return block;
+    .find(":selected");
+  if (block.val() == EMPTY_VAL) return undefined;
+  else return block.attr("data-block") as string;
 };
+
+/**
+ * @description get the project type from the select of the types in the projects section
+ */
+GUI.getCurrentSelectedProjectType = (): WTM.ProjectTypes => {
+  return ($(`[data-name="${PROJECTS_TYPES_SELECT}"`)
+    .find("select")
+    .val() as unknown) as WTM.ProjectTypes;
+};
+
+GUI.getCurrentSelectedProjectLib = (): string | undefined => {
+  let toReturn = ($(`[data-name="${PROJECTS_LIB_SELECT}"`)
+  .find("select")
+  .val() as unknown) as string;
+  if( toReturn == EMPTY_VAL ) return undefined;
+  else return toReturn;
+};
+
 
 function loadScript(div: HTMLElement, src: string) {
   var script = document.createElement("script");
@@ -147,6 +169,7 @@ function loadScript(div: HTMLElement, src: string) {
   div.appendChild(script);
 }
 
+
 /**
  * @description add the project scripts where the ADD-SCRIPTS executable identifier is present
  */
@@ -154,6 +177,14 @@ GUI.populateScripts = (div: JQuery<HTMLElement>) => {
   WLogger.log(` Populating scripts `);
   let currentProject = GUI.getCurrentSelectedProject();
   if (!currentProject) return;
+  for (let scriptPath of currentProject.depManager.getAllLibCdnScripts()) {
+    if( scriptPath.includes("http") ) loadScript(div[0],  scriptPath );
+    else loadScript(div[0], StringComposeWriter.concatenatePaths( currentProject.getPath(), scriptPath ));
+  }
+  for (let scriptPath of currentProject.depManager.getAllLibScripts()) {
+    if( scriptPath.includes("http") ) loadScript(div[0],  scriptPath );
+    else loadScript(div[0], StringComposeWriter.concatenatePaths( currentProject.getPath(), scriptPath ));
+  }
   for (let scriptPath of currentProject.depManager.getScripts()) {
     if( scriptPath.includes("http") ) loadScript(div[0],  scriptPath );
     else loadScript(div[0], StringComposeWriter.concatenatePaths( currentProject.getPath(), scriptPath ));
@@ -170,6 +201,14 @@ GUI.populateStyles = (div: JQuery<HTMLElement>) => {
   WLogger.log(` Populating styles `);
   let currentProject = GUI.getCurrentSelectedProject();
   if (!currentProject) return;
+  for (let stylePath of currentProject.depManager.getAllLibCdnStyles()) {
+    if( stylePath.includes("http") ) div.append(` <link rel="stylesheet" type="text/css" href="${ stylePath }"> `);
+    else div.append(` <link rel="stylesheet" type="text/css" href="${StringComposeWriter.concatenatePaths( currentProject.getPath(), stylePath )}"> `);
+  }
+  for (let stylePath of currentProject.depManager.getAllLibStyles()) {
+    if( stylePath.includes("http") ) div.append(` <link rel="stylesheet" type="text/css" href="${ stylePath }"> `);
+    else div.append(` <link rel="stylesheet" type="text/css" href="${StringComposeWriter.concatenatePaths( currentProject.getPath(), stylePath )}"> `);
+  }
   for (let stylePath of currentProject.depManager.getStyles()) {
     if( stylePath.includes("http") ) div.append(` <link rel="stylesheet" type="text/css" href="${ stylePath }"> `);
     else div.append(` <link rel="stylesheet" type="text/css" href="${StringComposeWriter.concatenatePaths( currentProject.getPath(), stylePath )}"> `);
@@ -234,16 +273,17 @@ GUI.populateAviableProjectsLib = (parentContainer: JQuery<HTMLElement>) => {
     .first()
     .clone();
   parentContainer.empty();
-  
+  let libArray: string[] = []
   let currentProject = GUI.getCurrentSelectedProject();
-  if (!currentProject) {
+  if ( currentProject ) libArray = currentProject.depManager.getAllLib();
+  if (!currentProject || !libArray.length) {
     let child = childSkeleton.clone();
-    child.val("");
-    child.text("none");
+    child.val(EMPTY_VAL);
+    child.text(EMPTY_VAL);
     parentContainer.append(child);
     
   } else {
-    for ( let libName of currentProject.depManager.getAllLib() ) {
+    for ( let libName of libArray ) {
       let child = childSkeleton.clone();
       child.val(libName);
       child.text(libName);
@@ -278,7 +318,8 @@ GUI.populateVisuals = (parentContainer: JQuery<HTMLElement>) => {
   let visuals: WTM.Visual[] = bulkVisuals.getAllVisualsFiltered();
   if (!visuals.length) {
     let child = childSkeleton.clone();
-    child.text("none");
+    child.text(EMPTY_VAL);
+    child.val(EMPTY_VAL);
     child.attr("data-path", "");
     child.attr("data-projectType", "");
     parentContainer.append(child);
@@ -299,6 +340,7 @@ GUI.populateVisuals = (parentContainer: JQuery<HTMLElement>) => {
     child.attr("data-visualsPath", currentProject.getVisualsPath());
     child.attr("data-projectType", projectType);
     child.text(text);
+    child.val("");
     parentContainer.append(child);
   }
 };
@@ -326,7 +368,8 @@ GUI.populateViews = (parentContainer: JQuery<HTMLElement>) => {
   let views: WTM.View[] = bulkViews.getAllViews();
   if (!views.length) {
     let child = childSkeleton.clone();
-    child.text("none");
+    child.text(EMPTY_VAL);
+    child.val(EMPTY_VAL);
     child.attr("data-parentPath", "");
     child.attr("data-projectType", "");
     child.attr("data-name", "");
@@ -341,6 +384,7 @@ GUI.populateViews = (parentContainer: JQuery<HTMLElement>) => {
     child.attr("data-projectType", projectType);
     child.attr("data-name", name);
     child.text(name);
+    child.val("");
     parentContainer.append(child);
   }
 };
@@ -360,7 +404,8 @@ GUI.populateViewBlocks = (parentContainer: JQuery<HTMLElement>) => {
   if (!view) {
     let child = childSkeleton.clone();
     child.attr("data-block", "");
-    child.text("none");
+    child.text(EMPTY_VAL);
+    child.val(EMPTY_VAL);
     parentContainer.append(child);
     return;
   }
@@ -370,6 +415,7 @@ GUI.populateViewBlocks = (parentContainer: JQuery<HTMLElement>) => {
     let child = childSkeleton.clone();
     child.attr("data-block", block);
     child.text(block);
+    child.val("");
     parentContainer.append(child);
   }
 };
@@ -392,8 +438,14 @@ GUI.getCurrentSelectedFolderTreeFiles = (folderTreeselector: string): string[] =
   }
   return toReturn;
 }
-
-GUI.populateFolderTree = (container: JQuery<HTMLElement>, folder: WTM.folderObject) => {
+/**
+ * @description populate a container with the passed folder tree and considering the given filters
+ * @param container the container to populate
+ * @param folder the folder tree to parse
+ * @param filters an array of string that contains the extensions of the file to not exclude
+ * - if empty or undefined all the file are considered
+ */
+GUI.populateFolderTree = (container: JQuery<HTMLElement>, folder: WTM.folderObject, filters?: string[]) => {
   WLogger.log(` Populating folder tree `);
   let skeleton = container.find(`[${SKELETON_ATTR}]`);
   let parentContainer = skeleton.find(`[${CONTAINER_ATTR}]`).clone();
@@ -412,14 +464,15 @@ GUI.populateFolderTree = (container: JQuery<HTMLElement>, folder: WTM.folderObje
   if (!visual) return;
   container.empty();
   container.append(skeleton);
-  container.append(buildFolderTree( parentSkeleton, headerSkeleton, childSkeleton, folder ));
+  container.append(buildFolderTree( parentSkeleton, headerSkeleton, childSkeleton, folder, filters ));
 };
 
 function buildFolderTree (
   parentSkeleton: JQuery<HTMLElement>,
   headerSkeleton: JQuery<HTMLElement>,
   childSkeleton:  JQuery<HTMLElement>,
-  folderTree: WTM.folderObject
+  folderTree: WTM.folderObject,
+  filters?: string[]
 ){
   let parentFolder = folderTree.folderPath;
   let folderPath = folderTree.folderPath;
@@ -429,14 +482,21 @@ function buildFolderTree (
   parent.append( header );
 
   for ( let folder of folderTree.folders ){
-      let subFolder = buildFolderTree( parentSkeleton, headerSkeleton, childSkeleton, folder );
+      let subFolder = buildFolderTree( parentSkeleton, headerSkeleton, childSkeleton, folder, filters );
       parent.append(subFolder);
   }
   for ( let file of folderTree.files ){
+    
+    let path = StringComposeWriter.concatenatePaths( parentFolder, file);
+    let splittedPath = path.split('.');
+    let extension = splittedPath[ splittedPath.length - 1 ];
+    if( filters && !filters.includes( extension ) ) continue;
+
     let child = childSkeleton.clone();
     child.find(`[${CONTAINER_CHILD_TEXT}]`).text( file );
-    child.attr("data-path", StringComposeWriter.concatenatePaths( parentFolder, file));
-    parent.append( child )
+    child.attr("data-path", path );
+    parent.append( child );
+    
   }
   return parent;
 }
@@ -527,20 +587,59 @@ function buildViewDragAndDropForReorderPaths(
   return toReturn;
 }
 
+
+GUI.populateLibDragDrop = (
+  container: JQuery<HTMLElement>
+) => {
+  WLogger.log(` Populating lib drag drop `);
+  let skeleton = container.find(`[${SKELETON_ATTR}]`);
+  let parentContainer = skeleton.find(`[${CONTAINER_ATTR}]`).clone();
+  let childSkeleton = parentContainer
+    .find(`[${CONTAINER_CHILD_ATTR}]`)
+    .first()
+    .clone();
+  let headerSkeleton = parentContainer
+    .find(`[${CONTAINER_HEADER_ATTR}]`)
+    .first()
+    .clone();
+  parentContainer.empty();
+  let parentSkeleton = parentContainer.clone();
+
+  let currentProject = GUI.getCurrentSelectedProject();
+  if (!currentProject) return;
+
+  let libNamesOrder: string[] = currentProject.depManager.getAllLibKeysWithOrder();
+  
+  for ( let i = 0; i < libNamesOrder.length; i++ ){
+    let libName = libNamesOrder[i]
+    let child = childSkeleton.clone();
+    let orderElem = child.find("[data-order]");
+    orderElem.text(libName);
+    orderElem.attr("data-order", i);
+    orderElem.attr("data-libName", libName);
+    parentSkeleton.append(child);
+  }
+
+  container.empty();
+  container.append(skeleton);
+  container.append(parentSkeleton);
+};
+
+
 GUI.retriveViewReorderedPaths = (): WTM.informationsJson["blocks"] => {
-  let replacedIdentifierTag = $(`[data-name='${VIEW_DRAG_AND_DROP}']`);
+  let replacedIdentifierTag = $(`[data-name='${DRAG_DROP_VIEW}']`);
   let currentView = GUI.getCurrentSelectedView();
   if (!currentView) return {};
   let viewBlocks = currentView.getBlocks();
   let editedPathsOrder = replacedIdentifierTag.find(
-    '[data-path]:not([data-path=""]'
+    '[data-path]:not([data-path=""])'
   ); // get all the elements with a path inside
   let clearedElements: string[] = [];
   editedPathsOrder.each((index, elem) => {
     let element = $(elem);
     let elementPath = element.attr("data-path") as string;
 
-    // if parent has data-block attribute uses it, instead if it is undefined check for the closest element with the data-block attribute.
+    // if parent has data-block attribute uses the find one, instead if it is undefined check for the closest element with the data-block attribute.
     // - .parent() is needed because when the element is an included custom block if .closest() is used it find as the block's parent  the block itself and auto-include the block in itself.
     // - .closest() instead is used for the other paths that non represtents custom blocks
     let elementBlockName =
@@ -557,20 +656,15 @@ GUI.retriveViewReorderedPaths = (): WTM.informationsJson["blocks"] => {
   return viewBlocks;
 };
 
-/**
- * @description get the project type from the select of the types in the projects section
- */
-GUI.getCurrentSelectedProjectType = (): WTM.ProjectTypes => {
-  return ($(`[data-name="${PROJECTS_TYPES_SELECT}"`)
-    .find("select")
-    .val() as unknown) as WTM.ProjectTypes;
-};
+GUI.retriveLibReordered = () : string[] => {
+  
+  let replacedIdentifierTag = $(`[data-name='${DRAG_DROP_LIB}']`);
+  let currentProject = GUI.getCurrentSelectedProject();
+  if (!currentProject) return [];
 
-GUI.getCurrentSelectedProjectLib = (): string | undefined => {
-  let toReturn = ($(`[data-name="${PROJECTS_LIB_SELECT}"`)
-  .find("select")
-  .val() as unknown) as string;
-  if( !toReturn ) return undefined;
-  else return toReturn;
-};
-
+  let editedLibsOrder = replacedIdentifierTag.find( '[data-libName]:not([data-libName=""])' ); // get all the elements with a libName inside
+  let libNames: string[] = [];
+  editedLibsOrder.each( (index, elem) => { libNames.push( $(elem).attr("data-libName") as string )  });
+  
+  return libNames;
+}

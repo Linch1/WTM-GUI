@@ -10,6 +10,7 @@ body{
     --gray-2: #6F7685;
     --gray-3: #e3e8ee;
     --gray-4: #ced4da;
+    --gray-5: #CCD5E0;
     --card-border-radius: 4px;
     --card-shadow: 0 0 0 1px rgba(50, 50, 93, 0.01), 0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.02);
 }
@@ -46,4 +47,70 @@ ul{
 
 [data-skeleton] {
     display: none;
+}
+
+label{
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+section .section-intro{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 10px 0;
+}
+section .section-intro .actions{
+    height: 100%;
+    display: flex;
+    width:fit-content;
+    justify-content: space-between;
+    align-items: center;
+}
+section .section-intro .actions i{
+    color: var(--gray-2);
+    font-size: 20px;
+    margin-left: 10px;
+    padding: 5px 10px;
+    transition: background-color .2s linear;
+}
+section .section-intro .actions i:hover{
+    background-color: var(--gray-5)
+}
+
+.card {
+    margin: 7px 0;
+}
+.card .card-body{
+    height: 0;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.card .card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 0;
+}
+.card.open .card-header{
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+.card.open .card-header .arrow-up{
+    display: block;
+}
+.card.open .card-header .arrow-down{
+    display: none;
+}
+.card .card-header .arrow-down{
+    display: block;
+    font-size: 20px;
+}
+.card .card-header .arrow-up{
+    display: none;
+    font-size: 20px;
+}
+.card.open .card-body{
+    padding: 1.25rem;
+    height: fit-content;
 }

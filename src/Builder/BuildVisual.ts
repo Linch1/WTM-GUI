@@ -29,12 +29,12 @@ function renderVisuals(visuals: WTM.Visual[], type: WTM.renderTypes){
 function renderVisual(visual: WTM.Visual, type: WTM.renderTypes){
     let currentProject = GUI.getCurrentSelectedProject();
     if( visual.isCreated() ) {
-        WLogger.log(`Compiling visual ${visual.getName()}. Type: ${type}`);
+        WLogger.log(`Compiling visual ${visual.getName()}. Type: ${type}. ProjectType: ${visual.getProjectType()}`);
         visual.writer.populateIdentifiers();
         visual.converter.render(type, currentProject);
     } else {
         let fbVisual = visual.getFallbackVisual();
-        WLogger.log(`FALLBACK: Compiling visual ${visual.getName()}. Type: ${type}`);
+        WLogger.log(`FALLBACK: Compiling visual ${visual.getName()}. Type: ${type}. ProjectType: ${visual.getProjectType()}`);
         if( fbVisual ) {
             fbVisual.writer.populateIdentifiers();
             fbVisual.converter.render(type, currentProject);
@@ -84,7 +84,6 @@ $(document).ready(function() {
         let authorUrl = GUI.getFormElementValue(form.find(".visual-author-url")) as string;
         let githubRepo = GUI.getFormElementValue(form.find(".visual-github-repo")) as string;
         let projectType = GUI.getCurrentSelectedProjectType() as string;
-        
         new WTM.Visual(currentProject.getVisualsPath(), {
             name: name,
             projectPath: currentProject.getPath(),
@@ -94,6 +93,16 @@ $(document).ready(function() {
             authorUrl: authorUrl,
             githubRepo: githubRepo
         }).writer.createVisual();
+    });
+
+    $("#import-lib-dep").click( evt => {
+        let currentProject = GUI.getCurrentSelectedProject();
+        let currentVisual = GUI.getCurrentSelectedVisual();
+        let currentLibName = GUI.getCurrentSelectedProjectLib();
+        if( !currentProject || !currentVisual || !currentLibName ) return;
+
+        let libDependencies = currentProject.depManager.getLibDependenciesSpecific( currentLibName );
+        currentVisual.depManager.copyLibDependencies( currentLibName, libDependencies );
     });
 
     $("#import-visual-assets").click( evt => {
@@ -112,41 +121,40 @@ $(document).ready(function() {
         }
     });
 
-    //@ts-ignore
-    $("#add-visual-style-form").parsley()
-    $("#add-visual-style-form").submit( evt => {
-        evt.preventDefault();
-        let form = $("#add-visual-style-form");
-        let stylePath = GUI.getFormElementValue(form.find(".visual-style-path")) as string;
-        if( stylePath.includes('./') ) stylePath = stylePath.replace( './', '');
-        let currentVisual = GUI.getCurrentSelectedVisual();
-        if(!currentVisual) return;
-        currentVisual.depManager.addStyle(stylePath);
-    });
-
-    //@ts-ignore
-    $("#add-visual-script-form").parsley()
-    $("#add-visual-script-form").submit( evt => {
-        evt.preventDefault();
-        let form = $("#add-visual-script-form");
-        let scriptPath = GUI.getFormElementValue(form.find(".visual-script-path")) as string;
-        if ( !scriptPath || scriptPath == "" ) {
-            WLogger.log("no path provided");
-            WError.throw(ERRORS.NO_PATH_PROVIDED);
-        }
-        let currentVisual = GUI.getCurrentSelectedVisual();
-        console.log( currentVisual );
-        if(!currentVisual) return;
-        currentVisual.depManager.addScript(scriptPath);
-    });
-
     $("#add-folder-tree-selected-files").click( evt => {
-        let stylesPaths = GUI.getCurrentSelectedFolderTreeFiles(".visuals-styles .folder-path");
-        let scriptsPaths = GUI.getCurrentSelectedFolderTreeFiles(".visuals-scripts .folder-path");
+        let stylesPaths = GUI.getCurrentSelectedFolderTreeFiles(".visuals-styles > .folder-path");
+        let scriptsPaths = GUI.getCurrentSelectedFolderTreeFiles(".visuals-scripts > .folder-path");
         let currentVisual = GUI.getCurrentSelectedVisual();
         if(!currentVisual) return;
         currentVisual.depManager.setScripts(scriptsPaths);
         currentVisual.depManager.setStyles(stylesPaths);
+    });
+
+    //@ts-ignore
+    $("#add-project-lib-cdn-form-vs").parsley()
+    $("#add-project-lib-cdn-form-vs").submit( evt => {
+        evt.preventDefault();
+        let currentProject = GUI.getCurrentSelectedProject();
+        if( !currentProject ) return;
+        let form = $("#add-project-lib-cdn-form-vs");
+        let currentLibName = GUI.getCurrentSelectedProjectLib();
+        if(!currentLibName) return;
+        let libCdn = GUI.getFormElementValue(form.find(".pj-lib-cdn")) as string;
+        if( libCdn ) currentProject.depManager.addLibCdnScriptOrStyle(currentLibName, libCdn);
+    });
+
+    function getCommandLine() {
+        switch (process.platform) { 
+           case 'darwin' : return 'open';
+           case 'win32' : return 'start';
+           default : return 'xdg-open';
+        }
+     }
+    $("#update-visual").click( evt => {
+        let currentVisual = GUI.getCurrentSelectedVisual();
+        if( !currentVisual ) return;
+        var exec = require('child_process').exec;
+        exec(`code ${currentVisual.getDefaultFilePath()}`);
     });
 
     

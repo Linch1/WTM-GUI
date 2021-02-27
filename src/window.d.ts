@@ -8,7 +8,9 @@ export declare global {
             VISUALS_PATH: string,
             VIEWS_PATH: string,
             PROJECTS: WTM.BulkProjects,
+
             retriveViewReorderedPaths: () => WTM.informationsJson["blocks"],
+            retriveLibReordered: () => string[],
 
             removePorjectDirectoryFromString: ( string: string ) => string;
 
@@ -32,7 +34,8 @@ export declare global {
             populateAviableProjectsLib: (parentSelect: JQuery<HTMLElement>) => void,
 
             populateViewsDragDrop: (parentSelect: JQuery<HTMLElement>) => void,
-            populateFolderTree: (parentContainer: JQuery<HTMLElement>, folder: WTM.folderObject) => void,
+            populateLibDragDrop: (parentSelect: JQuery<HTMLElement>) => void,
+            populateFolderTree: (parentContainer: JQuery<HTMLElement>, folder: WTM.folderObject, filters?: string[]) => void,
 
             WLogger: (phrase: string) => any;
         }

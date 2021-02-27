@@ -1,185 +1,73 @@
 <section id="manage-views">
     <div class="container">
-        <h2>Projects</h2>
+        <header class="section-intro">
+            <h2>Projects</h2>
+            <div class="actions">
+                <i id="refresh-project-visual-dependencies" class='bx bx-repeat' data-tippy-content="Refresh project dependencies" data-tippy-placement="bottom" ></i>
+            </div>
+        </header>
         
-        <div class="form-group row mt-3">
+        <div class="row">
             <div class="col-md-12">
-                <h4 class="text-danger">Create Project</h4>
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Create Project</h6>
+                        <div class="header-arrow">
+                            <i class='bx bx-chevron-up arrow-up'></i>
+                            <i class='bx bx-chevron-down arrow-down'></i>
+                        </div>
+                    </div>
+                    <form class="card-body row" id="add-visual-form" >
+                        <div class="form-group col-md-6">
+                            <label class="col-form-label">name</label>
+                            <input type="text" name="" id="project-name" value="new project" placeholder="Insert the project name" class="form-control" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-form-label">Path</label>
+                            <input type="text" name="" id="project-path" value="/home/pero/projects/WTM/GUI/" placeholder="Insert the project path" class="form-control" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-form-label">Views Path</label>
+                            <input type="text" name="" id="project-views" value="" placeholder="Insert the project views path" class="form-control">
+                            <small>Empty for default one</small>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-form-label">Visuals Path</label>
+                            <input type="text" name="" id="project-visuals" value="" placeholder="Insert the project visuals path" class="form-control">
+                            <small>Empty for default one</small>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <button id="create-project" class="btn btn-primary">Create Project</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label class="col-form-label">Name</label>
-                <input type="text" name="" id="project-name" value="new project" placeholder="Insert the project name" class="form-control">
-            </div>
-     
-            <div class="col-md-6">
-                <label class="col-form-label">Path</label>
-                <input type="text" name="" id="project-path" value="/home/pero/projects/WTM/GUI/" placeholder="Insert the project path" class="form-control">
-            </div>
-            <div class="col-md-6">
-                <label class="col-form-label">Views Path</label>
-                <input type="text" name="" id="project-views" value="" placeholder="Insert the project views path" class="form-control">
-                <small>Empty for default one</small>
-            </div>
-            <div class="col-md-6">
-                <label class="col-form-label">Visuals Path</label>
-                <input type="text" name="" id="project-visuals" value="" placeholder="Insert the project visuals path" class="form-control">
-                <small>Empty for default one</small>
-            </div>
-        
-            <div class="col-md-12 mt-3">
-                <button id="create-project" class="btn btn-primary">Create Project</button>
-            </div>
-
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <div class="form-group row mt-3">
-                    
-                    <div class="col-md-12">
-                        <h4 class="text-danger">Add Script</h4>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <label class="col-form-label">Script Path</label>
-                        <input type="text" name="" id="project-script-path" value="" placeholder="Insert path to a script" class="form-control">
-                    </div>
-                    
-                    <div class="col-md-12 mt-3">
-                        <button id="add-project-script" class="btn btn-primary">Add Script</button>
-                    </div>
-
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row mt-3">
-                    <div class="col-md-12">
-                        <h4 class="text-danger">Add Style</h4>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <label class="col-form-label">Style Path</label>
-                        <input type="text" name="" id="project-style-path" value="" placeholder="Insert path to a style" class="form-control">
-                    </div>
-                    
-                    <div class="col-md-12 mt-3">
-                        <button id="add-project-style" class="btn btn-primary">Add Style</button>
-                    </div>
-                </div>
-            </div>
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h6>Add Lib</h6>
+                        <h6> Import project scripts/styles</h6>
+                        <div class="header-arrow">
+                            <i class='bx bx-chevron-up arrow-up'></i>
+                            <i class='bx bx-chevron-down arrow-down'></i>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <form class="form-group row" id="add-project-lib-form">
-                            <div class="col-md-12">
-                                <label class="col-form-label">Lib Name</label>
-                                <input class="pj-lib-name form-control" type="text" name="" value="" placeholder="Insert the lib name" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="col-form-label">Lib Site Url</label>
-                                <input class="pj-lib-site-url form-control" type="text" name="" value="" placeholder="Insert where the lib can be downloadable">
-                                <small>The given Path must be the path to the directory that contains the lib files</small>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="col-form-label">Lib CDN</label>
-                                <input class="pj-lib-cdn form-control" type="text" name="" value="" placeholder="Insert the lib cdn" >
-                            </div>
-                            <div class="col-md-6">
-                                <label class="col-form-label">Lib Content</label>
-                                <div class="custom-file">
-                                    <input class="pj-lib-folder custom-file-input" type="file"  webkitdirectory directory multiple>
-                                    <label class="pj-lib-folder-label custom-file-label" for="pj-lib-folder">Choose file</label>
-                                </div>
-                                <small>The uploaded directory must be the directory that contains the lib files</small>
-                            </div>
-                            <div class="col-md-12">
-                                <button class="btn btn-primary">Add </button>
-                            </div>
-                            
-                        </form>
-                        
-                        
-                    </div>
-               
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h6>Add lib Cdn</h6>
-                    </div>
-                    <div class="card-body">
-                        <form class="form-group row" id="add-project-lib-cdn-form">
-                            
-                            <div class="col-md-12">
-                                <label class="col-form-label">Lib CDN</label>
-                                <input class="pj-lib-cdn form-control" type="text" name="" value="" placeholder="Insert the lib cdn" required>
-                            </div>
-
-                            <div class="col-md-12">
-                                <button class="btn btn-primary">Add </button>
-                            </div>
-                            
-                        </form>
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h6>Replace/Add lib content</h6>
-                    </div>
-                    <div class="card-body">
-                        <form class="form-group row" id="replace-project-lib-content">
-                            
-                            <div class="col-md-12">
-                                <label class="col-form-label">Lib Content</label>
-                                <div class="custom-file">
-                                    <input class="pj-lib-folder custom-file-input" type="file" webkitdirectory directory multiple >
-                                    <label class="pj-lib-folder-label custom-file-label">Choose file</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <button class="btn btn-primary">Add </button>
-                            </div>
-                            
-                        </form>
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h6>Lib Tree </h6>
-                    </div>
-                    <div class="card-body">
-                        <form class="form-group row" id="add-project-lib-form">
-                             <div id="[WTM-HTML-!EXEC!-FOLDER-TREE-LIB]" data-action="!EXEC!" data-type="HTML" data-name="FOLDER-TREE-LIB" class="mt-2 col-md-12 lib-files" ><%-include ("/home/pero/projects/WTM/GUI/WTM-VISUALS/folderTree/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+                    <div class="card-body row"  >
+                        <div class="col-md-6">
+                            <h5>Scripts</h5>
+                             <div id="[WTM-HTML-!EXEC!-FOLDER-TREE-PROJECT-SCRIPTS]" data-action="!EXEC!" data-type="HTML" data-name="FOLDER-TREE-PROJECT-SCRIPTS" class="mt-2 project-scripts" ><%-include ("/home/pero/projects/WTM/GUI/WTM-VISUALS/folderTree/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
 </div>
-                            <div class="col-md-12">
-                                <button id="add-lib-selected-files" class="btn btn-primary">Add selected files</button>
-                            </div>
-                        </form>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Styles</h5>
+                             <div id="[WTM-HTML-!EXEC!-FOLDER-TREE-PROJECT-STYLES]" data-action="!EXEC!" data-type="HTML" data-name="FOLDER-TREE-PROJECT-STYLES" class="mt-2 project-styles" ><%-include ("/home/pero/projects/WTM/GUI/WTM-VISUALS/folderTree/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
+</div>
+                        </div>
+                        <button id="add-project-assets" class="btn btn-primary">Add selected files</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="form-group row mt-3">
-                    
-            <div class="col-md-12">
-                <h4 class="text-danger">Actions</h4>
-            </div>
-            
-            <div class="col-md-12 mt-3">
-                <button id="refresh-project-visual-dependencies" class="btn btn-success">Refresh visual dependencies</button>
-            </div>
-
-        </div>
-        
     </div>
 </section>

@@ -1,0 +1,173 @@
+<section id="manage-views">
+    <div class="container">
+        <header class="section-intro">
+            <h2>Projects Lib</h2>
+            
+        </header>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Create Lib</h6>
+                        <div class="header-arrow">
+                            <i class='bx bx-chevron-up arrow-up'></i>
+                            <i class='bx bx-chevron-down arrow-down'></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-group row" id="add-project-lib-form">
+                            <div class="col-md-12">
+                                <label class="col-form-label">Lib Name</label>
+                                <input class="pj-lib-name form-control" type="text" name="" value="" placeholder="Insert the lib name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label">Lib Site Url</label>
+                                <input class="pj-lib-site-url form-control" type="text" name="" value="" placeholder="Insert where the lib can be downloadable">
+                                <small>The given Path must be the path to the directory that contains the lib files</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label">Lib CDN</label>
+                                <input class="pj-lib-cdn form-control" type="text" name="" value="" placeholder="Insert the lib cdn" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label">Lib Content</label>
+                                <div class="custom-file">
+                                    <input class="pj-lib-folder custom-file-input" type="file"  webkitdirectory directory multiple>
+                                    <label class="pj-lib-folder-label custom-file-label" for="pj-lib-folder">Choose file</label>
+                                </div>
+                                <small>The uploaded directory must be the directory that contains the lib files</small>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="btn btn-primary">Add </button>
+                            </div>
+                            
+                        </form>
+                        
+                        
+                    </div>
+               
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Replace/Add lib content</h6>
+                        <div class="header-arrow">
+                            <i class='bx bx-chevron-up arrow-up'></i>
+                            <i class='bx bx-chevron-down arrow-down'></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-group row" id="replace-project-lib-content">
+                            
+                            <div class="col-md-12">
+                                <label class="col-form-label">Lib Content</label>
+                                <div class="custom-file">
+                                    <input class="pj-lib-folder custom-file-input" type="file" webkitdirectory directory multiple >
+                                    <label class="pj-lib-folder-label custom-file-label">Choose file</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button class="btn btn-primary">Add </button>
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Lib Tree </h6>
+                        <div class="header-arrow">
+                            <i class='bx bx-chevron-up arrow-up'></i>
+                            <i class='bx bx-chevron-down arrow-down'></i>
+                        </div>
+                    </div>
+                    <div class="card-body row"  >
+                        <div class="col-md-6">
+                            <h5>Scripts</h5>
+                            [WTM-HTML-!EXEC!-FOLDER-TREE-LIB-SCRIPTS  visualTarget="folderTree"  parentClasses="mt-2 lib-scripts" ]
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Styles</h5>
+                            [WTM-HTML-!EXEC!-FOLDER-TREE-LIB-STYLES  visualTarget="folderTree"  parentClasses="mt-2 lib-styles" ]
+                        </div>
+                        <button id="add-project-lib-assets" class="btn btn-primary">Add selected files</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Add lib Cdn</h6>
+                        <div class="header-arrow">
+                            <i class='bx bx-chevron-up arrow-up'></i>
+                            <i class='bx bx-chevron-down arrow-down'></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-group row" id="add-project-lib-cdn-form">
+                            
+                            <div class="col-md-12">
+                                <label class="col-form-label">Lib CDN</label>
+                                <input class="pj-lib-cdn form-control" type="text" name="" value="" placeholder="Insert the lib cdn" required>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button class="btn btn-primary">Add </button>
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Lib Cdn [ Fake Folders ] </h6>
+                        <div class="header-arrow">
+                            <i class='bx bx-chevron-up arrow-up'></i>
+                            <i class='bx bx-chevron-down arrow-down'></i>
+                        </div>
+                    </div>
+                    <div class="card-body row"  >
+                        <div class="col-md-6">
+                            <h5>Scripts</h5>
+                            [WTM-HTML-!EXEC!-FOLDER-TREE-LIB-CDN-SCRIPTS  visualTarget="folderTree"  parentClasses="mt-2 lib-scripts-cdn" ]
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Scripts</h5>
+                            [WTM-HTML-!EXEC!-FOLDER-TREE-LIB-CDN-STYLES  visualTarget="folderTree"  parentClasses="mt-2 lib-styles-cdn" ]
+                        </div>
+                        <div class="col-md-12">
+                            <button id="remove-project-lib-cdn" class="btn btn-primary">Remove selected Cdn</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Reorder Lib</h6>
+                        <div class="header-arrow">
+                            <i class='bx bx-chevron-up arrow-up'></i>
+                            <i class='bx bx-chevron-down arrow-down'></i>
+                        </div>
+                    </div>
+                    <div class="card-body row"  >
+                        [WTM-HTML-!EXEC!-DRAG-DROP-LIB  visualTarget="drag-drop"  parentClasses="mt-2 lib-scripts-cdn col-md-12" ]
+                        <div class="col-md-12">
+                            <button id="reorder-lib" class="btn btn-primary">Reorder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>

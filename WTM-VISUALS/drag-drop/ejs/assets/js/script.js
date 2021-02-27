@@ -3,8 +3,8 @@ $(document).ready( evt => {
     allDragAndDrops.each( (i, dragDropContainer ) => {
         new Sortable(dragDropContainer, {
             animation: 350,
-            filter: '.ignore-drag',
             group: `drag-drop-${i}`,
+            draggable: [".item", ".drag-drop"],
             forceFallback: true,
             onStart() {
                 Sortable.ghost.style.opacity = 0;

@@ -1,36 +1,44 @@
+
+
 .drag-drop {
   background: #fff;
   padding: 15px 25px 25px 15px;
-  width: fit-content;
-  border-radius: 3px;
+  width: 100%;
   border: 1px solid #ccc;
   box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
   position: relative;
 }
+[data-block=BODY]{
+  border:0;
+  padding: 0;
+  box-shadow: none;
+  background: inherit;
+}
+[data-block=BODY] > header > .icons{
+  display: none;
+}
 
 .drag-drop .drag-drop{
   width: 100%;
-}
-.drag-drop .drag{
-  position: absolute;
-  pointer-events: none;
-  right: 5px;
-  top: 5px;
 }
 
 .drag-drop header{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
+}
+.drag-drop header h3{
+  text-transform: uppercase;
+  font-size: 20px;
 }
 
 .drag-drop .item {
   color: #fff;
   display: flex;
   margin: 10px 0;
-  padding: 15px 17px;
-  background: #304b5f;
-  border-radius: 3px;
+  padding: 5px 10px;
+  background: #4E647E;
   align-items: center;
   justify-content: space-between;
 }
@@ -38,10 +46,10 @@
   margin-bottom: 0px;
 }
 .drag-drop .item .text {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
 }
-.drag-drop .item i {
+.drag {
   margin-left: 1rem;
   cursor: pointer;
 }

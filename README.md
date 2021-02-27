@@ -6,6 +6,7 @@ Used libraries:
 
 - **typescript**: https://github.com/microsoft/TypeScript
 - **electron**: https://www.electronjs.org/
+- **child-process**
 
 - **jquery**: https://jquery.com/
 - **bootstrap**: https://getbootstrap.com/
@@ -13,3 +14,6 @@ Used libraries:
 - **Sortable** : https://github.com/SortableJS/Sortable
 - **ejs**: https://ejs.co/
 - **ejs-electron**: https://www.npmjs.com/package/ejs-electron
+- **tippy**
+- **popper**
+
