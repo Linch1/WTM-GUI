@@ -2,6 +2,8 @@ import * as WTM from "wtm-lib";
 import { WError } from "../Errors/WtmError";
 import { WLogger } from "../Logger/WLogger";
 import { ERRORS } from "../Errors/Errors";
+const electron = require("electron");
+const BrowserWindow = electron.remote.BrowserWindow;
 const GUI = window.WTM_GUI;
 
 /**
@@ -32,7 +34,7 @@ $(document).ready(function() {
             WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
             return 
         }
-        new WTM.View(currentProject.getViewsPath(), name, projectType as WTM.ProjectTypes).create();
+        new WTM.View(name, currentProject).create();
     });
     $("#add-block").click( evt => { 
 
@@ -58,29 +60,45 @@ $(document).ready(function() {
         });
     });
 
-    $("#include-path").click( evt => {
-        let path = $("#path-to-include").val() as string;
+    // $("#include-path").click( evt => {
+    //     let path = $("#path-to-include").val() as string;
 
+    //     let currentView = GUI.getCurrentSelectedView();
+    //     let currentBlock = GUI.getCurrentSelectedViewBlock();
+    //     if(!currentView || !currentBlock) return;
+    //     currentView.includeRelative(
+    //         currentBlock,
+    //         path
+    //     )
+    // });
+    $("#view-demo").click( evt => {
         let currentView = GUI.getCurrentSelectedView();
-        let currentBlock = GUI.getCurrentSelectedViewBlock();
-        if(!currentView || !currentBlock) return;
-
-        currentView.includeRelative(
-            currentBlock,
-            path
-        )
+        if( !currentView ) return;
+        let viewPath = currentView.getPath();
+        let win = new BrowserWindow({
+            backgroundColor: '#FFF', // Add this new line
+            width: 1200,
+            height: 750,
+            // frame: false,
+            frame: true,
+            webPreferences: {
+              nodeIntegration: true,
+              enableRemoteModule: true,
+              webSecurity: false
+            },
+          });
+          win.loadFile(viewPath);
     });
+    
     $("#include-visual").click( evt => {
         let visual = GUI.getCurrentSelectedVisual();
         let currentView = GUI.getCurrentSelectedView();
         let currentBlock = GUI.getCurrentSelectedViewBlock();
         if(!visual || !currentView || !currentBlock) return;
 
-        let renderPath = visual.getRenderFilePath();
-        if( renderPath.includes(GUI.TEMPLATE_PATH) ) renderPath = renderPath.replace(GUI.TEMPLATE_PATH, "");
         currentView.includeRelative(
             currentBlock,
-            renderPath
+            visual
         )
     });
     $("#save-view-drag-drop").click( evt => {

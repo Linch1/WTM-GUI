@@ -1,5 +1,4 @@
 import * as WTM from "wtm-lib";
-import { ConstViews } from "wtm-lib";
 import { ERRORS } from "../Errors/Errors";
 import { WError } from "../Errors/WtmError";
 import { WLogger } from "../Logger/WLogger";

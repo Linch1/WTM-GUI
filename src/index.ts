@@ -33,7 +33,7 @@ function createWindow() {
     app.quit();
   });
 }
-
+app.commandLine.appendSwitch('allow-file-access-from-files');
 app.on("ready", createWindow);
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

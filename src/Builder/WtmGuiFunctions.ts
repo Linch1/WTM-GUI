@@ -1,5 +1,5 @@
 import * as WTM from "wtm-lib";
-import { ConstViews, StringComposeReader, StringComposeWriter } from "wtm-lib";
+import { StringComposeReader, StringComposeWriter } from "wtm-lib";
 import { InputValidators } from "../Enum/inputValidators";
 import { ERRORS } from "../Errors/Errors";
 import { WError } from "../Errors/WtmError";
@@ -117,9 +117,12 @@ GUI.getCurrentSelectedVisual = () => {
  */
 GUI.getCurrentSelectedView = () => {
   WLogger.log(` Retriving selected view `);
-  let currentSelectedView = $(`[data-name='${VIEWS_SELECT}']`).find(
-    ":selected"
-  );
+  let currentProject = GUI.getCurrentSelectedProject();
+  if(!currentProject) {
+    WError.throw(ERRORS.NO_CURRENT_PROJECT);
+    return;
+  }
+  let currentSelectedView = $(`[data-name='${VIEWS_SELECT}']`).find(":selected");
   let parentAbsPath = currentSelectedView.attr("data-parentPath") as string;
   let name = currentSelectedView.attr("data-name") as string;
   let projectType = currentSelectedView.attr("data-projectType") as string;
@@ -129,8 +132,10 @@ GUI.getCurrentSelectedView = () => {
     WLogger.log(projectType);
     WError.throw(ERRORS.NO_VALID_PROJECT_TYPE);
     return;
-  } else
-    return new WTM.View(parentAbsPath, name, projectType as WTM.ProjectTypes);
+  } else{
+    return new WTM.View(name, currentProject);
+  }
+    
 };
 /**
  * @description returns the selected view block
@@ -359,12 +364,7 @@ GUI.populateViews = (parentContainer: JQuery<HTMLElement>) => {
   let currentProject = GUI.getCurrentSelectedProject();
   if (!currentProject) return;
   
-  let currentViewsPath = currentProject.getViewsPath();
-  let bulkViews: WTM.BulkView = new WTM.BulkView(
-    currentViewsPath,
-    ConstViews.Prefix,
-    currentProject.getProjectType()
-  );
+  let bulkViews: WTM.BulkView = new WTM.BulkView( currentProject );
   let views: WTM.View[] = bulkViews.getAllViews();
   if (!views.length) {
     let child = childSkeleton.clone();

@@ -1,6 +1,4 @@
 import * as WTM from "wtm-lib";
-import { WError } from "../Errors/WtmError";
-import { WLogger } from "../Logger/WLogger";
 import { ERRORS } from "../Errors/Errors";
 import electron from "electron";
 import { StringComposeReader } from "wtm-lib";

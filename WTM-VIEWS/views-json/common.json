@@ -1,6 +1,8 @@
 {
 
-    "header": "<%  let TEMPLATE_PATH = process.env.PWD;  %> <%-include (TEMPLATE_PATH + '/WTM-VISUALS/header/ejs/render.ejs', {TEMPLATE_PATH: process.env.PWD})%>",
-    "footer": "<%-include (TEMPLATE_PATH + '/WTM-VISUALS/footer/ejs/render.ejs', {TEMPLATE_PATH: process.env.PWD})%>"
+    "viewStart": "<%  let TEMPLATEPATH = process.env.PWD;  %> <%-include (TEMPLATEPATH + '/WTM-VISUALS/header/ejs/render.ejs', {TEMPLATEPATH: process.env.PWD})%>",
+    "viewEnd": "<%-include (TEMPLATEPATH + '/WTM-VISUALS/footer/ejs/render.ejs', {TEMPLATEPATH: process.env.PWD})%>",
+    "scripts": [],
+    "styles": []
  
 }

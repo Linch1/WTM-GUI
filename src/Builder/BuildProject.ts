@@ -46,6 +46,7 @@ $(document).ready(function() {
     
 
     $("#create-project").click( evt => {
+        evt.preventDefault();
         let name = $("#project-name").val() as string;
         let projectType = GUI.getCurrentSelectedProjectType() as string;
         let form = $("#add-project-form");
@@ -121,6 +122,7 @@ $(document).ready(function() {
         let currentProject = GUI.getCurrentSelectedProject();
         if(!currentProject) return;
         currentProject.depManager.refreshVisualsDependencies();
+        new WTM.BulkView( currentProject ).reCreateAll();
     });
     
 });

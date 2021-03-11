@@ -1,7 +1,4 @@
 import * as WTM from "wtm-lib";
-import { StringComposeWriter } from "wtm-lib";
-import { ERRORS } from "../Errors/Errors";
-import { WError } from "../Errors/WtmError";
 import { WLogger } from "../Logger/WLogger";
 
 const GUI = window.WTM_GUI;

@@ -1,18 +1,96 @@
-<% let TEMPLATE_PATH = process.env.PWD; %> <%-include (TEMPLATE_PATH +
-'/WTM-VISUALS/header/ejs/render.ejs', {TEMPLATE_PATH: process.env.PWD})%>
+<% let TEMPLATEPATH = process.env.PWD; %> <%-include (TEMPLATEPATH +
+'/WTM-VISUALS/header/ejs/render.ejs', {TEMPLATEPATH: process.env.PWD})%>
+
+<div
+  id="ADD-STYLES"
+  data-action="!EXEC!"
+  data-type="PLACEHOLDER"
+  data-name="ADD-STYLES"
+>
+  <link
+    rel="stylesheet"
+    href="<%= TEMPLATEPATH + '/WTM-PROJECT/assets/css/arrows.css' %>"
+  />
+  <link
+    rel="stylesheet"
+    href="<%= TEMPLATEPATH + '/WTM-PROJECT/assets/css/common.css' %>"
+  />
+  <link
+    rel="stylesheet"
+    href="<%= TEMPLATEPATH + '/WTM-PROJECT/assets/css/typo.css' %>"
+  />
+  <link
+    rel="stylesheet"
+    href="<%= TEMPLATEPATH + '/WTM-VISUALS/drag-drop/ejs/assets/css/style.css' %>"
+  />
+  <link
+    rel="stylesheet"
+    href="<%= TEMPLATEPATH + '/WTM-VISUALS/folderTree/ejs/assets/css/style.css' %>"
+  />
+  <link
+    rel="stylesheet"
+    href="<%= TEMPLATEPATH + '/WTM-VISUALS/navbar/ejs/assets/css/style.css' %>"
+  />
+  <script
+    type="module"
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+  ></script>
+  <script
+    type="module"
+    src="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+  ></script>
+</div>
 <!--<[WTM-HTML-BODY]-->
+
 <!--<[WTM-HTML-navbar]-->
-<%-include (TEMPLATE_PATH + "/WTM-VISUALS/navbar/ejs/render.ejs",
-{TEMPLATE_PATH: process.env.PWD})-%>
+<%-include (TEMPLATEPATH +"/WTM-VISUALS/navbar/ejs/render.ejs", {TEMPLATEPATH:
+process.env.PWD})-%>
 <!--[WTM-HTML-navbar]>-->
+
 <main id="main">
-<!--<[WTM-HTML-main]-->
-<%-include (TEMPLATE_PATH +"/WTM-VISUALS/manageVisual/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
-<%-include (TEMPLATE_PATH +"/WTM-VISUALS/manageProjects/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
-<%-include (TEMPLATE_PATH +"/WTM-VISUALS/manageLib/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
-<%-include (TEMPLATE_PATH +"/WTM-VISUALS/manageView/ejs/render.ejs", {TEMPLATE_PATH: process.env.PWD})-%>
-  <!--[WTM-HTML-main]>-->
+  <!--<[WTM-HTML-main]-->
+  <%-include (TEMPLATEPATH +"/WTM-VISUALS/manageVisual/ejs/render.ejs", {TEMPLATEPATH: process.env.PWD})-%>
+<%-include (TEMPLATEPATH +"/WTM-VISUALS/manageProjects/ejs/render.ejs", {TEMPLATEPATH: process.env.PWD})-%>
+<%-include (TEMPLATEPATH +"/WTM-VISUALS/manageLib/ejs/render.ejs", {TEMPLATEPATH: process.env.PWD})-%>
+<%-include (TEMPLATEPATH +"/WTM-VISUALS/manageView/ejs/render.ejs", {TEMPLATEPATH: process.env.PWD})-%>
+<!--[WTM-HTML-main]>-->
 </main>
 <!--[WTM-HTML-BODY]>-->
-<%-include(TEMPLATE_PATH+'/WTM-VISUALS/footer/ejs/render.ejs',
-{TEMPLATE_PATH:process.env.PWD})%>
+
+<div
+  id="ADD-SCRIPTS"
+  data-action="!EXEC!"
+  data-type="PLACEHOLDER"
+  data-name="ADD-SCRIPTS"
+>
+  <script
+    type="module"
+    src="<%= TEMPLATEPATH + '/WTM-PROJECT/assets/lib/Popper/popper.min.js' %>"
+  ></script>
+  <script
+    type="module"
+    src="<%= TEMPLATEPATH + '/WTM-PROJECT/assets/lib/Tippy/tippy.min.js' %>"
+  ></script>
+  <script
+    type="module"
+    src="<%= TEMPLATEPATH + '/WTM-PROJECT/assets/js/main.js' %>"
+  ></script>
+  <script
+    type="module"
+    src="<%= TEMPLATEPATH + '/WTM-VISUALS/drag-drop/ejs/assets/js/script.js' %>"
+  ></script>
+  <script
+    type="module"
+    src="<%= TEMPLATEPATH + '/WTM-VISUALS/folderTree/ejs/assets/js/script.js' %>"
+  ></script>
+  <script
+    type="module"
+    src="<%= TEMPLATEPATH + '/WTM-VISUALS/navbar/ejs/assets/js/script.js' %>"
+  ></script>
+  <script
+    type="module"
+    src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js"
+  ></script>
+</div>
+<%-include (TEMPLATEPATH + '/WTM-VISUALS/footer/ejs/render.ejs', {TEMPLATEPATH:
+process.env.PWD})%>
