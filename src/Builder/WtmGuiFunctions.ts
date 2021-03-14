@@ -609,7 +609,12 @@ GUI.populateLibDragDrop = (
   if (!currentProject) return;
 
   let libNamesOrder: string[] = currentProject.depManager.getAllLibKeysWithOrder();
-  
+  if( !libNamesOrder.length ){
+    let child = childSkeleton.clone();
+    let orderElem = child.find("[data-order]");
+    orderElem.text("Empty lib");
+    parentSkeleton.append(child);
+  }
   for ( let i = 0; i < libNamesOrder.length; i++ ){
     let libName = libNamesOrder[i]
     let child = childSkeleton.clone();

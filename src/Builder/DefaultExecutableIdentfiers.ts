@@ -66,11 +66,13 @@ DefaultExecutable: {
           let visualsContainer = $(`[data-name='${VISUALS_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
           let blockContainer = $(`[data-name='${VIEW_BLOCKS_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
           let libContainer = $(`[data-name='${PROJECTS_LIB_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
+          let libDragDrop = $(`[data-name='${DRAG_DROP_LIB}']`);
           let projectTypesContainer = $(`[data-name='${PROJECTS_TYPES_SELECT}']`).find(`[${CONTAINER_ATTR}]`);
           GUI.populateViews(viewsContainer);
           GUI.populateViewBlocks(blockContainer);
           GUI.populateVisuals(visualsContainer);
           GUI.populateAviableProjectsLib(libContainer);
+          GUI.populateLibDragDrop(libDragDrop);
           GUI.populateAviableProjectsTypes(projectTypesContainer);
 
           let currentProject = GUI.getCurrentSelectedProject();
@@ -79,6 +81,7 @@ DefaultExecutable: {
           let stylesFolderTree: WTM.folderObject = WTM.FileReader.readFolderTree(currentProject.depManager.getAssetsStylesPath());
           GUI.populateFolderTree($(`[data-name='${FOLDER_TREE_PROJECT_SCRIPTS}']`), scriptsFolderTree, ["js"]);
           GUI.populateFolderTree($(`[data-name='${FOLDER_TREE_PROJECT_STYLES}']`), stylesFolderTree, ["css"]);
+          
 
         });
 

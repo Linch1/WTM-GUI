@@ -47,12 +47,15 @@ $(document).ready(function() {
 
     $("#create-project").click( evt => {
         evt.preventDefault();
-        let name = $("#project-name").val() as string;
-        let projectType = GUI.getCurrentSelectedProjectType() as string;
+    
         let form = $("#add-project-form");
+        let projectType = GUI.getCurrentSelectedProjectType() as string;
+        let name = $("#project-name").val() as string;
+        let demoUrl = GUI.getFormElementValue(form.find(".pj-demo-url")) as string;
         let path = GUI.getFormElementValue(form.find(".pj-folder")) as string;
         let visualsPath = GUI.getFormElementValue(form.find(".pj-folder-visuals")) as string;
         let viewsPath = GUI.getFormElementValue(form.find(".pj-folder-views")) as string;
+        
         let correct = true;
         if ( !name || name == "" ) { WLogger.log("no name provided"); correct = false}
         if ( !projectType || projectType == "" ) { WLogger.log("no projectType provided"); correct = false}
@@ -73,13 +76,14 @@ $(document).ready(function() {
             return;
         }
         GUI.PROJECTS.addProject(
-            {
+            {  
                 name: name,
                 projectType: projectType as WTM.ProjectTypes,
                 path: path,
                 author: "",
                 autorhUrl: "",
                 githubRepo: "",
+                demoUrl: demoUrl ? demoUrl : "",
                 assetsAutoImport: false,
                 visualsPath: visualsPath,
                 viewsPath: viewsPath,

@@ -72,6 +72,8 @@ $(document).ready(function() {
     //     )
     // });
     $("#view-demo").click( evt => {
+        let currentProject = GUI.getCurrentSelectedProject();
+        if( !currentProject ) return;
         let currentView = GUI.getCurrentSelectedView();
         if( !currentView ) return;
         let viewPath = currentView.getPath();
@@ -87,7 +89,14 @@ $(document).ready(function() {
               webSecurity: false
             },
           });
-          win.loadFile(viewPath);
+          if( currentProject.getDemoUrl() ) win.loadURL(currentProject.getDemoUrl());
+          else win.loadFile(viewPath);
+    });
+    
+    $("#view-recreate").click( evt => {
+        let currentView = GUI.getCurrentSelectedView();
+        if( !currentView ) return;
+        currentView.reCreate();
     });
     
     $("#include-visual").click( evt => {
